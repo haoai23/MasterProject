@@ -37,18 +37,19 @@ public class WhackAMole_PlayerMove : MonoBehaviour
        
     void DefineTracker(GameObject Tracker1, GameObject Tracker2)
         {
-            if (Tracker1.transform.position.x < Tracker2.transform.position.x)
-            {
-                RightHandT = Tracker1;
-                LeftHandT = Tracker2;
-            }
-            else
-            {
-                RightHandT = Tracker2;
-                LeftHandT = Tracker1;
-            }
-
+        /*if (Tracker1.transform.position.x < Tracker2.transform.position.x)
+        {
+            RightHandT = Tracker1;
+            LeftHandT = Tracker2;
         }
+        else
+        {
+            RightHandT = Tracker2;
+            LeftHandT = Tracker1;
+        }*/
+        RightHandT = GameObject.FindWithTag("RightHand");
+        LeftHandT = GameObject.FindWithTag("LefttHand");
+    }
     void WhackAMolePlayerMove()
     {
         RightHand.transform.position = new Vector3(-RightHandT.transform.position.x * XProportion, RightHandT.transform.position.y * YProportion, RightHandT.transform.position.z);

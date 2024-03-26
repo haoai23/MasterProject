@@ -34,20 +34,18 @@ public class Climing_PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*LeftLeg = GameObject.FindWithTag("LeftLeg");
+        LeftLeg = GameObject.FindWithTag("LeftLeg");
         RightLeg = GameObject.FindWithTag("RightLeg");
         Chest = GameObject.FindWithTag("Chest");
         if (LeftLeg != null & RightLeg != null & Chest != null)
         {
-            if(Input.GetKeyDown(KeyCode.R))
-            { isReady = true; }
-            
+            isReady = true;
         }
-        Debug.Log(isReady);*/
+        Debug.Log(isReady);
         KeyboradControlPlayer();//測試用
         if (isReady == false)
         {
-            StairTower_DefinedViveTracker(Tracker1, Tracker2, Tracker3);
+            //StairTower_DefinedViveTracker(Tracker1, Tracker2, Tracker3);
 
             ChestTransformY = Chest.transform.position.y;
             RightLegTransformY = RightLeg.transform.position.y;

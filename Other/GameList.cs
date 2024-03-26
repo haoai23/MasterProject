@@ -14,7 +14,7 @@ using UnityEngine.UI;
 public class GameList : MonoBehaviour
 {
     public GameObject _UserInterface, _GameList, DefindTracker;
-    public  Text UserID, UserWeight, UserBithday_Date;
+    public static Text UserID, UserWeight, UserBithday_Date;
     public static string userID, userWeight, userBithday_Date;
 
     private void Update()
@@ -31,11 +31,7 @@ public class GameList : MonoBehaviour
             _UserInterface.SetActive(false);
             _GameList.SetActive(true);
             DefindTracker.SetActive(false);
-            Debug.Log("omg");
         }
-        
-
-        Debug.Log("om");
     }
     public void UserInterface()
     {
@@ -52,7 +48,7 @@ public class GameList : MonoBehaviour
         }
     }
     
-    private void UserInfomationCeateFile(Text userID, Text userBithday_Date)
+    public static string UserInfomationCeateFile(Text userID, Text userBithday_Date)
     {
         DateTime localDate = DateTime.Now;
         string fileName = userID.text + "_" + userBithday_Date.text;
@@ -74,9 +70,9 @@ public class GameList : MonoBehaviour
         else
         {
             Debug.Log("子資料夾已存在: " + timePath);
-            dataTable(timePath);
+            //dataTable(timePath);
         }
-
+        return timePath;
     }
     void dataTable(string filePath)
     {

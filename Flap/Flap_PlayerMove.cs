@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -14,7 +15,6 @@ public class Flap_PlayerMove : MonoBehaviour
     List<float> Stability = new List<float>();
     List<float> Strength = new List<float>();
     List<float> LastingValue = new List<float>();
-    public Text Score;
 
     bool Record = true;
     float RecordXRotation, RecordZRotation;
@@ -36,6 +36,11 @@ public class Flap_PlayerMove : MonoBehaviour
             LastingValue.Add(RecordXRotation - HipsCube.transform.eulerAngles.x);//持久度
             Stability.Add(RecordZRotation - HipsCube.transform.eulerAngles.z);//穩定度            
         }
+        if (isGameOver)
+        {
+            Flap_DataAnalysis();
+        }
+        FlapSaveCSV();
     }
     void IfPlayerDontMove()
     {
@@ -85,7 +90,15 @@ public class Flap_PlayerMove : MonoBehaviour
         float YPositionvariance = YPositionSumOfSquares / Strength.Count;
         float YPositionStandardValue = Mathf.Sqrt(YPositionvariance);
         StrengthSD.text = YPositionStandardValue.ToString();
+        FlapSaveCSV();
 
+
+    }
+    private void FlapSaveCSV()
+    {
+        string timePath = GameList.UserInfomationCeateFile(GameList.UserID, GameList.UserBithday_Date);
+        Debug.Log(timePath);
+        Debug.Log("有喔有喔");
     }
 
 
