@@ -18,6 +18,7 @@ public class Flap_GameStartandEnd : MonoBehaviour
         ResultScreen.SetActive(false);
         Timer.Start_Timer = true;
         Flap_PlayerMove.isReady = true;
+        Flap_PlayerMove.isGameOver = false;
     }
     public  void WhenGameOver()
     {

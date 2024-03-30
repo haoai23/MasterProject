@@ -30,6 +30,8 @@ public class Timer : MonoBehaviour
                 Flap_GameStartandEnd gameController = StartButton.GetComponent<Flap_GameStartandEnd>();
                 gameController.WhenGameOver();
                 Flap_PlayerMove.isGameOver = true;
+                Flap_PlayerMove.isReady = false;
+
             }
 
             

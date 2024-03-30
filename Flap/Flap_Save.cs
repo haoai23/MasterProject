@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +7,7 @@ using System.IO;
 using System;
 //using System.Diagnostics;
 
-public class Flap_Save : MonoBehaviour
+/*public class Flap_Save : MonoBehaviour
 {
     public GameObject HipsTracker;
     public Text FlapScore;
@@ -53,7 +53,7 @@ public class Flap_Save : MonoBehaviour
             File.AppendAllText(path, Data);
         }
 
-    }*/
+    }
 
 
-}
+}*/

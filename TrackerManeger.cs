@@ -18,12 +18,19 @@ public class TrackerManeger : MonoBehaviour
     string[] tags = { "LeftHand", "LeftLeg","Chest", "RightLeg", "RightHand"};//由左到右
     int tagIndex = 0; // 用于在 tags 數列中循环使用tag
     public GameObject[] trackedObjects;
-    public Text _UserID, UserWeight, _UserBirthday;
 
-    void Start()
+    private void Awake()
     {
+        GameObject[] Objs = GameObject.FindGameObjectsWithTag("TrackerManerger");
+        if (Objs.Length > 0)
+        {
+            Destroy(this.gameObject);
+        }
+
         DontDestroyOnLoad(gameObject);
     }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -31,9 +38,8 @@ public class TrackerManeger : MonoBehaviour
         {
             ReadHTCViveTracker();
         }
-
     }
-    List<GameObject> Tracker = new List<GameObject>() ;
+    public static List<GameObject> Tracker = new List<GameObject>() ;
 
      void ReadHTCViveTracker()
     {
@@ -67,7 +73,10 @@ public class TrackerManeger : MonoBehaviour
         // 不希望添加到Tracker列表的位置
         Vector3[] undesiredPositions =
         {
+
             new Vector3(-0.02094269f, 1.853097f, -7.3522f),
+            new Vector3(-0.5748546f, 0.2134703f, -7.274735f),
+            new Vector3(-2.758149f, 0.5444908f, -4.741567f),
             new Vector3(-2.381721f, 2.190113f, 1.40946f),
             new Vector3(1.168892f, 2.284639f, 0.7743435f),
             new Vector3(-2.344299f, 1.719263f, -4.903171f),

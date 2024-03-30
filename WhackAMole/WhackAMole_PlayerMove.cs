@@ -48,7 +48,7 @@ public class WhackAMole_PlayerMove : MonoBehaviour
             LeftHandT = Tracker1;
         }*/
         RightHandT = GameObject.FindWithTag("RightHand");
-        LeftHandT = GameObject.FindWithTag("LefttHand");
+        LeftHandT = GameObject.FindWithTag("LeftHand");
     }
     void WhackAMolePlayerMove()
     {
@@ -62,7 +62,7 @@ public class WhackAMole_PlayerMove : MonoBehaviour
         
         if (collision.gameObject.tag == "WhackAMole_Mole")
         {
-            Destroy(collision.gameObject);
+            Destroy(collision.gameObject); 
             WhackAMole_Score.Score = WhackAMole_Score.Score + 10;
             AtOriginalPoint = false;
             if (AtOriginalPoint == false)//紀錄回來時間
