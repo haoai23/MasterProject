@@ -188,7 +188,10 @@ public class StairTower_PlayerMove : MonoBehaviour
 
     void StairTower_DefinedViveTracker(GameObject Tracker, GameObject Tracker1, GameObject Tracker2)
     {
-        if (Tracker.transform.position.y > Tracker1.transform.position.y &&
+        RightLeg = GameObject.FindWithTag("RightLeg");
+        LeftLeg = GameObject.FindWithTag("LeftHLeg");
+        Chest = GameObject.FindWithTag("Chest");
+        /*if (Tracker.transform.position.y > Tracker1.transform.position.y &&
             Tracker.transform.position.y > Tracker2.transform.position.y)
         {
             Chest = Tracker;
@@ -241,7 +244,7 @@ public class StairTower_PlayerMove : MonoBehaviour
                 LeftLeg = Tracker;
             }
             isReady = true;
-        }
+        }*/
 
 
     }

@@ -21,13 +21,14 @@ public class TrackerManeger : MonoBehaviour
 
     private void Awake()
     {
-        GameObject[] Objs = GameObject.FindGameObjectsWithTag("TrackerManerger");
-        if (Objs.Length > 0)
+        GameObject[] Objs = GameObject.FindGameObjectsWithTag("TrackerManeger");
+        if (Objs.Length > 1)
         {
             Destroy(this.gameObject);
+            Debug.Log("yes");
         }
-
-        DontDestroyOnLoad(gameObject);
+        Debug.Log(null);
+        DontDestroyOnLoad(this.gameObject);
     }
 
 

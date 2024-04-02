@@ -28,8 +28,12 @@ public class Flap_PlayerMove : MonoBehaviour
 
     bool Record = true;
     float RecordXRotation, RecordZRotation;
-
-    // Update is called once per frame
+    AudioManeger audioManeger;
+    private void Start()
+    {
+        audioManeger = FindObjectOfType<AudioManeger>();
+        audioManeger.PlayAudio(1, "FlapBGM", true);
+    }
     void Update()
     {
         IfPlayerDontMove();
