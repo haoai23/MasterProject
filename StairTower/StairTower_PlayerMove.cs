@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Unity.VisualScripting;
 using UnityEditor.AssetImporters;
 using UnityEngine;
@@ -26,6 +28,26 @@ public class StairTower_PlayerMove : MonoBehaviour
 
     public GameObject _Start_Panel,_GameOver_Panel;
 
+    List<float> LeftLegPX = new List<float>();
+    List<float> LeftLegPY = new List<float>();
+    List<float> LeftLegPZ = new List<float>();
+    List<float> LeftLegRX = new List<float>();
+    List<float> LeftLegRY = new List<float>();
+    List<float> LeftLegRZ = new List<float>();
+
+    List<float> ChestPX = new List<float>();
+    List<float> ChestPY = new List<float>();
+    List<float> ChestPZ = new List<float>();
+    List<float> ChestRX = new List<float>();
+    List<float> ChestRY = new List<float>();
+    List<float> ChestRZ = new List<float>();
+
+    List<float> RightLegPX = new List<float>();
+    List<float> RightLegPY = new List<float>();
+    List<float> RightLegPZ = new List<float>();
+    List<float> RightLegRX = new List<float>();
+    List<float> RightLegRY = new List<float>();
+    List<float> RightLegRZ = new List<float>();
     // Update is called once per frame
     void Update()
     {
@@ -46,7 +68,30 @@ public class StairTower_PlayerMove : MonoBehaviour
                 PlayerMove();
                 AnalyzePlayerData();
                 StairTowerStartTimer = true;
-            }
+
+                LeftLegPX.Add(LeftLeg.transform.position.x);
+                LeftLegPY.Add(LeftLeg.transform.position.y);
+                LeftLegPZ.Add(LeftLeg.transform.position.z);
+                LeftLegRX.Add(LeftLeg.transform.eulerAngles.x);
+                LeftLegRY.Add(LeftLeg.transform.eulerAngles.y);
+                LeftLegRZ.Add(LeftLeg.transform.eulerAngles.z);
+
+                ChestPX.Add(Chest.transform.position.x);
+                ChestPY.Add(Chest.transform.position.y);
+                ChestPZ.Add(Chest.transform.position.z);
+                ChestRX.Add(Chest.transform.eulerAngles.x);
+                ChestRY.Add(Chest.transform.eulerAngles.y);
+                ChestRZ.Add(Chest.transform.eulerAngles.z);
+
+                RightLegPX.Add(LeftLeg.transform.position.x);
+                RightLegPY.Add(LeftLeg.transform.position.y);
+                RightLegPZ.Add(LeftLeg.transform.position.z);
+                RightLegRX.Add(LeftLeg.transform.eulerAngles.x);
+                RightLegRY.Add(LeftLeg.transform.eulerAngles.y);
+                RightLegRZ.Add(LeftLeg.transform.eulerAngles.z);
+
+
+            }   
             if(isGameOver)
             {
                 
@@ -113,10 +158,14 @@ public class StairTower_PlayerMove : MonoBehaviour
             Debug.Log("個人標準高度: "+PersonalStandardHeight);
         }
     }
+    public Text CountStep;
+    int countStep = 0;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "StairTower_NormalFloor")
         {                 
+            countStep += 1;
+            CountStep.text = countStep.ToString();
             CurrentFloor = collision.gameObject;
             if (IsJumping && collision.contacts[0].normal == new Vector2(0f, -1f))
             {                   
@@ -188,7 +237,15 @@ public class StairTower_PlayerMove : MonoBehaviour
 
     void StairTower_DefinedViveTracker(GameObject Tracker, GameObject Tracker1, GameObject Tracker2)
     {
-        if (Tracker.transform.position.y > Tracker1.transform.position.y &&
+        RightLeg = GameObject.FindWithTag("RightLeg");
+        LeftLeg = GameObject.FindWithTag("LeftLeg");
+        Chest = GameObject.FindWithTag("Chest");
+        if (LeftLeg != null & RightLeg != null & Chest != null)
+        {
+            isReady = true;
+        }
+
+        /*if (Tracker.transform.position.y > Tracker1.transform.position.y &&
             Tracker.transform.position.y > Tracker2.transform.position.y)
         {
             Chest = Tracker;
@@ -241,7 +298,7 @@ public class StairTower_PlayerMove : MonoBehaviour
                 LeftLeg = Tracker;
             }
             isReady = true;
-        }
+        }*/
 
 
     }
@@ -251,20 +308,22 @@ public class StairTower_PlayerMove : MonoBehaviour
     public Text _LeftLegCalfStability, _RightLegCalfStability, _ChestStability, _Score,_Time;
     void AnalyzePlayerData()
     {
-        float ChestRightDifference = Chest.transform.position.x - RightLeg.transform.position.x;
-        float ChestLefttDifference = Chest.transform.position.x - LeftLeg.transform.position.x;
-        if(!isGameOver)
+        float ChestRightDifference = Chest.transform.position.z - RightLeg.transform.position.z;
+        float ChestLefttDifference = Chest.transform.position.z - LeftLeg.transform.position.z;
+
+        _Time.text = StairTower_Timer.StairTower_i.ToString();
+        if (!isGameOver)
         { 
             AbdominalXrotation.Add(Chest.transform.position.x);
             _Score.text = StairTower_Score.ToString();
         }
        
         float averageRightLeg, averageLeftLeg;
-        if (isReady && RecordSuceesful && LeftLeg.transform.position.y > RightLeg.transform.position.y + 0.1f  && !isGameOver)
+        if (isReady && RecordSuceesful && LeftLeg.transform.position.y > RightLeg.transform.position.y + 1f  && !isGameOver)//左腳抬起的時候
         {
             AverageRightLeg.Add(ChestRightDifference);     
         }
-        else if (isReady && RecordSuceesful && RightLeg.transform.position.y > LeftLeg.transform.position.y + 0.1f && !isGameOver)
+        else if (isReady && RecordSuceesful && RightLeg.transform.position.y > LeftLeg.transform.position.y + 1f && !isGameOver) //#需要測試1f是否會太高原始值為0.1f
         {
             AverageLeftLeg.Add(ChestLefttDifference);    
         }
@@ -294,7 +353,55 @@ public class StairTower_PlayerMove : MonoBehaviour
             LeftStandardDeviation = (float)Mathf.Sqrt(LeftVariance);
             _LeftLegCalfStability.text = LeftStandardDeviation.ToString();
             Debug.Log("LeftVariance: " + LeftVariance);
-            Debug.Log("LeftStandardDeviation: " + LeftStandardDeviation);            
+            Debug.Log("LeftStandardDeviation: " + LeftStandardDeviation);
+
+            StairTowerpSaveCSV(AbdominalXrotationMean, StandardValue, RightsumOfSquares, RightStandardDeviation, LeftsumOfSquares, LeftStandardDeviation, StairTower_Timer.StairTower_i, countStep, StairTower_Score);
         }
+    }
+    public void StairTowerpSaveCSV(float ChestXRA, float ChestXRSD, float RightLegCalfStability, float RightLegCalfStabilitySD, float LeftLegCalfStability, float LeftLegCalfStabilityYSD, float time, int stepcount, int score)
+    {
+        string fileName = "StairTower.csv";
+        string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
+
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,ChestXRA,ChestXRSD,RightLegCalfStability,RightLegCalfStabilitySD,LeftLegCalfStability,LeftLegCalfStabilityYSD,time,stepcount,score");
+
+        // 確定最大長度
+        int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
+                                    ChestPX.Count, ChestPY.Count, ChestPZ.Count, ChestRX.Count, ChestRY.Count, ChestRZ.Count,
+                                    RightLegPX.Count, RightLegPY.Count, RightLegPZ.Count, RightLegRX.Count, RightLegRY.Count, RightLegRZ.Count}.Max();
+
+
+        // 根據最大長度遍歷
+        for (int i = 0; i < maxLength; i++)
+        {
+            string line = $"{GetValueOrDefault(LeftLegPX, i)},{GetValueOrDefault(LeftLegPY, i)},{GetValueOrDefault(LeftLegPZ, i)},{GetValueOrDefault(LeftLegRX, i)},{GetValueOrDefault(LeftLegRY, i)},{GetValueOrDefault(LeftLegRZ, i)}," +
+                          $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
+                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)}";
+
+            // 在每一行的末尾添加統計數據
+            if (i == 0) // 假設統計數據只需添加一次
+            {
+                line += $",{ChestXRA},{ChestXRSD},{RightLegCalfStability},{RightLegCalfStabilitySD},{LeftLegCalfStability},{LeftLegCalfStabilityYSD},{time},{stepcount},{score}";
+            }
+            sb.AppendLine(line);
+        }
+
+        // 使用 FileStream 和 StreamWriter 寫入文件
+        using (FileStream fs = new FileStream(timePath, FileMode.Create, FileAccess.Write, FileShare.None))
+        using (StreamWriter sw = new StreamWriter(fs))
+        {
+            sw.Write(sb.ToString());
+        }
+    }
+
+    // 輔助方法來處理可能的索引越界問題
+    private string GetValueOrDefault(List<float> list, int index)
+    {
+        if (index < list.Count)
+        {
+            return list[index].ToString();
+        }
+        return "N/A"; // 或者您可以選擇返回空字符串 ""
     }
 }

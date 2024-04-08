@@ -111,11 +111,11 @@ public class Flap_PlayerMove : MonoBehaviour
 
         
         FlapSaveCSV(ZRotationValueAverage, ZRotationStandardValue, XRotationValueAverage, 
-            XRotationStandardValue, YPositionValueAverage, YPositionStandardValue);
+            XRotationStandardValue, YPositionValueAverage, YPositionStandardValue,Flap_Score.Score);
 
 
     }
-    public void FlapSaveCSV(float ZRA, float ZRSD, float XRA, float XRSD, float YPA, float YPSD)
+    public void FlapSaveCSV(float ZRA, float ZRSD, float XRA, float XRSD, float YPA, float YPSD, float score)
     {
         string fileName = "Flap.csv";
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
@@ -133,7 +133,7 @@ public class Flap_PlayerMove : MonoBehaviour
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {
-                line += $",{ZRA},{ZRSD},{XRA},{XRSD},{YPA},{YPSD}";
+                line += $",{ZRA},{ZRSD},{XRA},{XRSD},{YPA},{YPSD},{score}";
             }
             sb.AppendLine(line);
         }

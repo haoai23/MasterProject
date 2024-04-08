@@ -21,23 +21,26 @@ public class TrackerManeger : MonoBehaviour
 
     private void Awake()
     {
-        GameObject[] Objs = GameObject.FindGameObjectsWithTag("TrackerManerger");
-        if (Objs.Length > 0)
+        DontDestroyOnLoad(this);
+        GameObject[] Objs = GameObject.FindGameObjectsWithTag("TrackerManeger");
+        if (Objs.Length > 1)
         {
-            Destroy(this.gameObject);
+            Destroy(this);
         }
 
-        DontDestroyOnLoad(gameObject);
     }
-
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if(Input.GetKeyDown("space"))
+        Debug.Log("1");
+    }
+    private void FixedUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))  
         {
             ReadHTCViveTracker();
+            Debug.Log("是在哈瞜");
         }
+        Debug.Log("2l424");
     }
     public static List<GameObject> Tracker = new List<GameObject>() ;
 
@@ -64,7 +67,7 @@ public class TrackerManeger : MonoBehaviour
         {
             tracker.tag = tags[tagIndex];
             tagIndex++;
-
+            Debug.Log("tagindex" + tagIndex);
         }
 
     }
@@ -74,13 +77,14 @@ public class TrackerManeger : MonoBehaviour
         Vector3[] undesiredPositions =
         {
 
-            new Vector3(-0.02094269f, 1.853097f, -7.3522f),
-            new Vector3(-0.5748546f, 0.2134703f, -7.274735f),
-            new Vector3(-2.758149f, 0.5444908f, -4.741567f),
+            new Vector3(-2.244299f, 1.624752f, -4.915313f),
+            new Vector3(1.17575f, 2.289566f, 0.8103738f),
+            new Vector3(0.08072472f, 1.689817f, -7.304611f),
             new Vector3(-2.381721f, 2.190113f, 1.40946f),
-            new Vector3(1.168892f, 2.284639f, 0.7743435f),
-            new Vector3(-2.344299f, 1.719263f, -4.903171f),
             new Vector3(0f,0f,0f)
+            ,new Vector3(1.148217f,2.255262f,0.9291604f),
+            new Vector3(0.2503674f,2.169511f, -7.224596f)
+
         };
 
         foreach (Vector3 undesiredPos in undesiredPositions)

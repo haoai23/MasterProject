@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -25,6 +26,27 @@ public class Climing_PlayerMove : MonoBehaviour
     bool isEnter = false;
     public static bool Climing_StartTimer = false;//開始計時
     Climing_GameControl climing_GameControl;
+
+    List<float> LeftLegPX = new List<float>();
+    List<float> LeftLegPY = new List<float>();
+    List<float> LeftLegPZ = new List<float>();
+    List<float> LeftLegRX = new List<float>();
+    List<float> LeftLegRY = new List<float>();
+    List<float> LeftLegRZ = new List<float>();
+
+    List<float> ChestPX = new List<float>();
+    List<float> ChestPY = new List<float>();
+    List<float> ChestPZ = new List<float>();
+    List<float> ChestRX = new List<float>();
+    List<float> ChestRY = new List<float>();
+    List<float> ChestRZ = new List<float>();
+
+    List<float> RightLegPX = new List<float>();
+    List<float> RightLegPY = new List<float>();
+    List<float> RightLegPZ = new List<float>();
+    List<float> RightLegRX = new List<float>();
+    List<float> RightLegRY = new List<float>();
+    List<float> RightLegRZ = new List<float>();
     private void Start()
     {
         PlayerRigiBody = GetComponent<Rigidbody>();
@@ -34,29 +56,50 @@ public class Climing_PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LeftLeg = GameObject.FindWithTag("LeftLeg");
+       /* LeftLeg = GameObject.FindWithTag("LeftLeg");
         RightLeg = GameObject.FindWithTag("RightLeg");
         Chest = GameObject.FindWithTag("Chest");
         if (LeftLeg != null & RightLeg != null & Chest != null)
         {
             isReady = true;
         }
-        Debug.Log(isReady);
+        Debug.Log(isReady);*/
         KeyboradControlPlayer();//測試用
         if (isReady == false)
         {
-            //StairTower_DefinedViveTracker(Tracker1, Tracker2, Tracker3);
+           StairTower_DefinedViveTracker(Tracker1, Tracker2, Tracker3);
 
-            ChestTransformY = Chest.transform.position.y;
-            RightLegTransformY = RightLeg.transform.position.y;
-            LeftLegTransformY = LeftLeg.transform.position.y;
-            Judgment_Criteria(ChestTransformY, RightLegTransformY, LeftLegTransformY);
+           ChestTransformY = Chest.transform.position.y;
+           RightLegTransformY = RightLeg.transform.position.y;
+           LeftLegTransformY = LeftLeg.transform.position.y;
+           Judgment_Criteria(ChestTransformY, RightLegTransformY, LeftLegTransformY);
         }
         else if (isReady == true)
         {
             StairTower_DefinedViveTracker(Tracker1, Tracker2, Tracker3);
             TrackerControlPlayer();
             Climing_StartTimer = true;
+
+            LeftLegPX.Add(LeftLeg.transform.position.x);
+            LeftLegPY.Add(LeftLeg.transform.position.y);
+            LeftLegPZ.Add(LeftLeg.transform.position.z);
+            LeftLegRX.Add(LeftLeg.transform.eulerAngles.x);
+            LeftLegRY.Add(LeftLeg.transform.eulerAngles.y);
+            LeftLegRZ.Add(LeftLeg.transform.eulerAngles.z);
+
+            ChestPX.Add(Chest.transform.position.x);
+            ChestPY.Add(Chest.transform.position.y);
+            ChestPZ.Add(Chest.transform.position.z);
+            ChestRX.Add(Chest.transform.eulerAngles.x);
+            ChestRY.Add(Chest.transform.eulerAngles.y);
+            ChestRZ.Add(Chest.transform.eulerAngles.z);
+
+            RightLegPX.Add(LeftLeg.transform.position.x);
+            RightLegPY.Add(LeftLeg.transform.position.y);
+            RightLegPZ.Add(LeftLeg.transform.position.z);
+            RightLegRX.Add(LeftLeg.transform.eulerAngles.x);
+            RightLegRY.Add(LeftLeg.transform.eulerAngles.y);
+            RightLegRZ.Add(LeftLeg.transform.eulerAngles.z);
             if (isEnter == false)
             {
                 newR_OR_L = -1;
@@ -427,40 +470,63 @@ public class Climing_PlayerMove : MonoBehaviour
             Debug.Log("左腳的均速" + leftLegAverageSpeed);
         }
     }
-    void ClimingSave()
+    public void StairTowerpSaveCSV(float ChestXRA, float ChestXRSD, float RightLegRZA, float RightLegRZSD, float LeftLegRZA, float LeftLegRZSD)
     {
-        string fileName = GameList.userID + "_" + GameList.userBithday_Date;
-        string filePath = Path.Combine(Application.dataPath, fileName);
+        string fileName = "StairTower.csv";
+        string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
-        /*using (StreamWriter writer = new StreamWriter(filePath))
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,ChestXRA,ChestXRSD,RightLegRZA,RightLegRZSD,LeftLegRZA,LeftLegRZSD");
+
+        // 確定最大長度
+        int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
+                                    ChestPX.Count, ChestPY.Count, ChestPZ.Count, ChestRX.Count, ChestRY.Count, ChestRZ.Count,
+                                    RightLegPX.Count, RightLegPY.Count, RightLegPZ.Count, RightLegRX.Count, RightLegRY.Count, RightLegRZ.Count}.Max();
+
+
+        // 根據最大長度遍歷
+        for (int i = 0; i < maxLength; i++)
         {
-            writer.WriteLine("Variable,Value"); // Writing headers
+            string line = $"{GetValueOrDefault(LeftLegPX, i)},{GetValueOrDefault(LeftLegPY, i)},{GetValueOrDefault(LeftLegPZ, i)},{GetValueOrDefault(LeftLegRX, i)},{GetValueOrDefault(LeftLegRY, i)},{GetValueOrDefault(LeftLegRZ, i)}," +
+                          $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
+                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)}";
 
-            // Writing existing data
-            writer.WriteLine("WhenGameOverShowCoin," + CoinNumber.ToString());
-            writer.WriteLine("ChestStandardValue," + StandardValue.ToString());
-            writer.WriteLine("RightLegStandardValue," + RightLegZRotationStandardValue.ToString());
-            writer.WriteLine("LeftLegStandardValue," + LeftLegZRotationStandardValue.ToString());
-            writer.WriteLine("AverageStepTime," + AverageStepTime.ToString());
-            writer.WriteLine("RightLegAverageSpeed," + rightLegAverageSpeed.ToString());
-            writer.WriteLine("LeftLegAverageSpeed," + leftLegAverageSpeed.ToString());
+            // 在每一行的末尾添加統計數據
+            if (i == 0) // 假設統計數據只需添加一次
+            {
+                line += $",{ChestXRA},{ChestXRSD},{RightLegRZA},{RightLegRZSD},{LeftLegRZA},{LeftLegRZSD}";
+            }
+            sb.AppendLine(line);
+        }
 
-            // Writing sensor values
-            writer.WriteLine("LeftLeg.transform," + LeftLeg.transform.ToString());
-            writer.WriteLine("RightLeg.transform," + RightLeg.transform.ToString());
-            writer.WriteLine("Chest.transform," + Chest.transform.ToString());
+        // 使用 FileStream 和 StreamWriter 寫入文件
+        using (FileStream fs = new FileStream(timePath, FileMode.Create, FileAccess.Write, FileShare.None))
+        using (StreamWriter sw = new StreamWriter(fs))
+        {
+            sw.Write(sb.ToString());
+        }
+    }
 
-            // Writing list data
-            writer.WriteLine("List1Data," + string.Join(",", List1.Select(x => x.ToString()).ToArray()));
-            writer.WriteLine("List2Data," + string.Join(",", List2.Select(x => x.ToString()).ToArray()));
-        }*/
-
-        Debug.Log("Data saved to CSV file.");
+    // 輔助方法來處理可能的索引越界問題
+    private string GetValueOrDefault(List<float> list, int index)
+    {
+        if (index < list.Count)
+        {
+            return list[index].ToString();
+        }
+        return "N/A"; // 或者您可以選擇返回空字符串 ""
     }
 
     void StairTower_DefinedViveTracker(GameObject Tracker, GameObject Tracker1, GameObject Tracker2)
     {
-        if (Tracker.transform.position.y > Tracker1.transform.position.y &&
+        RightLeg = GameObject.FindWithTag("RightLeg");
+        LeftLeg = GameObject.FindWithTag("LeftLeg");
+        Chest = GameObject.FindWithTag("Chest");
+        if (LeftLeg != null & RightLeg != null & Chest != null)
+        {
+            isReady = true;
+        }
+        /*if (Tracker.transform.position.y > Tracker1.transform.position.y &&
             Tracker.transform.position.y > Tracker2.transform.position.y)
         {
             Chest = Tracker;
@@ -513,7 +579,7 @@ public class Climing_PlayerMove : MonoBehaviour
                 LeftLeg = Tracker;
             }
             isReady = true;
-        }
+        }*/
 
 
     }
