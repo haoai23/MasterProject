@@ -31,16 +31,16 @@ public class TrackerManeger : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log("1");
-    }
-    private void FixedUpdate()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))  
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             ReadHTCViveTracker();
             Debug.Log("是在哈瞜");
         }
         Debug.Log("2l424");
+    }
+    private void FixedUpdate()
+    {
+        
     }
     public static List<GameObject> Tracker = new List<GameObject>() ;
 
@@ -77,19 +77,16 @@ public class TrackerManeger : MonoBehaviour
         Vector3[] undesiredPositions =
         {
 
-            new Vector3(-2.244299f, 1.624752f, -4.915313f),
-            new Vector3(1.17575f, 2.289566f, 0.8103738f),
-            new Vector3(0.08072472f, 1.689817f, -7.304611f),
-            new Vector3(-2.381721f, 2.190113f, 1.40946f),
+            new Vector3(-2.471596f, 2.297002f, 1.154322f),
+            new Vector3(1.097765f, 2.327811f, 0.9900124f),
+            new Vector3(-1.740437f, 1.887648f, -5.103213f),
+            new Vector3(0.9536016f, 1.885166f, -7.26f),
             new Vector3(0f,0f,0f)
-            ,new Vector3(1.148217f,2.255262f,0.9291604f),
-            new Vector3(0.2503674f,2.169511f, -7.224596f)
-
         };
 
         foreach (Vector3 undesiredPos in undesiredPositions)
         {
-            if (Vector3.Distance(position, undesiredPos) < 0.5f)
+            if (Vector3.Distance(position, undesiredPos) < 1f)
             {
                 // 如果感測器位置在不希望的位置附近，返回true
                 return true;

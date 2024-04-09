@@ -319,11 +319,11 @@ public class StairTower_PlayerMove : MonoBehaviour
         }
        
         float averageRightLeg, averageLeftLeg;
-        if (isReady && RecordSuceesful && LeftLeg.transform.position.y > RightLeg.transform.position.y + 1f  && !isGameOver)//左腳抬起的時候
+        if (isReady && RecordSuceesful && LeftLeg.transform.position.y > RightLeg.transform.position.y + 0.1f  && !isGameOver)//左腳抬起的時候
         {
             AverageRightLeg.Add(ChestRightDifference);     
         }
-        else if (isReady && RecordSuceesful && RightLeg.transform.position.y > LeftLeg.transform.position.y + 1f && !isGameOver) //#需要測試1f是否會太高原始值為0.1f
+        else if (isReady && RecordSuceesful && RightLeg.transform.position.y > LeftLeg.transform.position.y + 0.1f && !isGameOver) //#需要測試1f是否會太高原始值為0.1f
         {
             AverageLeftLeg.Add(ChestLefttDifference);    
         }

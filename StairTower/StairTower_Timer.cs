@@ -21,7 +21,7 @@ public class StairTower_Timer : MonoBehaviour
             _StairTowerTimer.SetActive(false);
             
         }
-        if (StairTower_PlayerMove.StairTowerStartTimer)
+        if (StairTower_PlayerMove.StairTowerStartTimer & !StairTower_PlayerMove.isGameOver)
         {
             StairTower_i++;
             StairTowerTimer_Text.text = StairTower_i.ToString();
