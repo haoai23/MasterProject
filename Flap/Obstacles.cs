@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Obstacles : MonoBehaviour
 {
     float ObstaclesMoveSpeeds = 3.5f;
     public GameObject RightObj, LeftObj;
-    public GameObject player;
 
     private void Update()
     {
@@ -30,10 +30,9 @@ public class Obstacles : MonoBehaviour
 
         if (Gap < 1)
         {
-            float AddGap = Random.Range(0.5f, 1.5f);
+            //float AddGap = Random.Range(0.5f, 1.5f);//縫隙不隨機產生大小直接固定成1f
+            float AddGap = 1.5f;
             RightObj.transform.localPosition = new Vector3(RightObjXPosition + AddGap, 0f, 0f);
-
-
         }
     }
     void SettingObstaclesMoveSpeeds()
@@ -48,6 +47,15 @@ public class Obstacles : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {       
         Flap_Score.Score -= 1 ;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name == "Cube")
+        { 
+            Flap_Score.Score -= 1;
+        }
+
+
     }
 
 }

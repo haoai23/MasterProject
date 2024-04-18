@@ -7,12 +7,22 @@ public class ObstaclesManerger : MonoBehaviour
     [SerializeField] GameObject[] ObstaclesPrefabs;
     GameObject Obj;
     private Rigidbody ObjRB;
-
     public void SpawnObstacles()
     {
         int ObstaclesType = Random.Range(0, ObstaclesPrefabs.Length);
+        int Range = Random.Range(4, 9);
+
         GameObject Obj = Instantiate(ObstaclesPrefabs[ObstaclesType], transform);//把物件生成在ObstaclesManeger物件底下
-        Obj.transform.position = new Vector3(-20f, Random.Range(3,8), 0f);
+
+        while (RandomValue.Contains(Range)) 
+        { Range = Random.Range(4, 9); }
+        Debug.Log("間隔大小:" + Range);
+        RandomValue.Add(Range);
+        if (RandomValue.Count >= 5)
+        {
+            RandomValue.Clear();
+        }
+        Obj.transform.position = new Vector3(-20f, Range, 0f);
         Obj.transform.Rotate(0, 0, 90);
         ObjRB = Obj.GetComponent<Rigidbody>();
         ObjRB.constraints = RigidbodyConstraints.FreezePositionY;
@@ -21,5 +31,8 @@ public class ObstaclesManerger : MonoBehaviour
         ObjRB.constraints = RigidbodyConstraints.FreezeRotationY;
         ObjRB.constraints = RigidbodyConstraints.FreezeRotationZ;       
     }
+    List<int> RandomValue = new List<int>();//紀錄產生過的數字
+    
+
 }
 

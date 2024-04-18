@@ -36,7 +36,6 @@ public class TrackerManeger : MonoBehaviour
             ReadHTCViveTracker();
             Debug.Log("是在哈瞜");
         }
-        Debug.Log("2l424");
     }
     private void FixedUpdate()
     {
