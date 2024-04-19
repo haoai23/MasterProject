@@ -7,6 +7,7 @@ public class Flap_Score2 : MonoBehaviour
 {
     public static bool IsTouch;
 
+
     private void OnTriggerEnter(Collider other)
     {
         IsTouch = true;
@@ -14,7 +15,7 @@ public class Flap_Score2 : MonoBehaviour
         {
             Flap_Score.Score += 0.5f;
         }
-        }
+    }
     private void OnTriggerExit(Collider other)
     {
         IsTouch = false;
