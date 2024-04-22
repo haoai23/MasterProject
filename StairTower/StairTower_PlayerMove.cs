@@ -164,14 +164,15 @@ public class StairTower_PlayerMove : MonoBehaviour
     {
         if (collision.gameObject.tag == "StairTower_NormalFloor")
         {                 
-            countStep += 1;
-            CountStep.text = countStep.ToString();
+            
             CurrentFloor = collision.gameObject;
             if (IsJumping && collision.contacts[0].normal == new Vector2(0f, -1f))
             {                   
                 CurrentFloor.GetComponent<BoxCollider2D>().enabled = false;
                 Debug.Log("¥Ø«e¶¥±è: "+CurrentFloor.GetComponent<BoxCollider2D>().enabled);
-
+                countStep += 1;
+                Debug.Log("CountStep: " + countStep);
+                CountStep.text = countStep.ToString();
                 /*if ( CurrentFloor.GetComponent<BoxCollider2D>().enabled == false)
                  {
                      CurrentFloor.GetComponent<BoxCollider2D>().enabled = true;

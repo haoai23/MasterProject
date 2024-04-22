@@ -136,7 +136,7 @@ public class WhackAMole_SpawnPrefab : MonoBehaviour
     public Text ActuallySecondQuadraScore_Text;
     public Text ActuallyThirdQuadranScore_Text;
     public Text ActuallyFourthQuadranScore_Text;
-    void QuadrantScore(float ReactionTime, int PositionIndex)//出現的次數要除上打到的次數
+    void QuadrantScore(float ReactionTime, int PositionIndex)//出現的次數要除上打到的次數//從這邊可以記錄是第一格的數據
     {
         if (PositionIndex < 2)
         {

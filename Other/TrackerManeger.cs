@@ -19,7 +19,7 @@ public class TrackerManeger : MonoBehaviour
     int tagIndex = 0; // 用于在 tags 數列中循环使用tag
     public GameObject[] trackedObjects;
 
-    private void Awake()
+    private void Start()
     {
         DontDestroyOnLoad(this);
         GameObject[] Objs = GameObject.FindGameObjectsWithTag("TrackerManeger");

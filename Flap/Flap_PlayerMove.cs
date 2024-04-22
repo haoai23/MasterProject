@@ -31,7 +31,7 @@ public class Flap_PlayerMove : MonoBehaviour
     List<float> ChestRY = new List<float>();
     List<float> ChestRZ = new List<float>();
 
-
+    List<float> FlapScore = new List<float>();
     bool Record = true;
     float RecordXRotation, RecordZRotation;
     List<float> YValue = new List<float>();//用來記錄過牆時的Y軸數據
@@ -60,6 +60,8 @@ public class Flap_PlayerMove : MonoBehaviour
             ChestRX.Add(HipsCube.transform.eulerAngles.x);
             ChestRY.Add(HipsCube.transform.eulerAngles.y);
             ChestRZ.Add(HipsCube.transform.eulerAngles.z);
+            FlapScore.Add(Flap_Score.Score);
+
             if (Flap_Score2.IsTouch)
             {
                 YValue.Add(HipsCube.transform.position.y);
@@ -140,15 +142,15 @@ public class Flap_PlayerMove : MonoBehaviour
         float YPositionSumOfSquares = Strength.Sum(x => Mathf.Pow(x - YPositionValueAverage, 2));
         float YPositionvariance = YPositionSumOfSquares / Strength.Count;
         float YPositionStandardValue = Mathf.Sqrt(YPositionvariance);
-        StrengthSD.text = YPositionStandardValue.ToString("F2");
+        //StrengthSD.text = YPositionStandardValue.ToString("F2");
 
         float YValueAverage = YValue.Average();//過牆時所有的Y值，用來評估穩定度
         float YValueSumOfSquares = YValue.Sum(x => Mathf.Pow(x - YValueAverage, 2));
         float YValuevariance = YValueSumOfSquares / YValue.Count;
         float YValueStandardValue = Mathf.Sqrt(YValuevariance);
-        StrengthSD2.text = YValueStandardValue.ToString("F2");
+        StrengthSD.text = YValueStandardValue.ToString("F2");
 
-        float YValue4RAverage = YValue4Range.Average();//過牆時不同高度的Y值，用來評估不同高度的穩定度
+      /*  float YValue4RAverage = YValue4Range.Average();//過牆時不同高度的Y值，用來評估不同高度的穩定度
         float YValue4RSumOfSquares = YValue4Range.Sum(x => Mathf.Pow(x - YValue4RAverage, 2));
         float YValue4Rvariance = YValue4RSumOfSquares / YValue4Range.Count;
         float YValue4RStandardValue = Mathf.Sqrt(YValue4Rvariance);
@@ -171,7 +173,7 @@ public class Flap_PlayerMove : MonoBehaviour
         float YValue8RAverage = YValue8Range.Average();//過牆時不同高度的Y值，用來評估不同高度的穩定度
         float YValue8RSumOfSquares = YValue8Range.Sum(x => Mathf.Pow(x - YValue8RAverage, 2));
         float YValue8Rvariance = YValue8RSumOfSquares / YValue8Range.Count;
-        float YValue8RStandardValue = Mathf.Sqrt(YValue8Rvariance);
+        float YValue8RStandardValue = Mathf.Sqrt(YValue8Rvariance);*/
 
         FlapSaveCSV(ZRotationValueAverage, ZRotationStandardValue, XRotationValueAverage, 
             XRotationStandardValue, YPositionValueAverage, YPositionStandardValue,Flap_Score.Score);
@@ -184,15 +186,15 @@ public class Flap_PlayerMove : MonoBehaviour
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,YValue4Range,YValue5Range,YValue6Range,YValue7Range,YValue8Range,,ZRA,ZRSD,XRA,XRSD,YPA,YPSD");
+        sb.AppendLine("ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RangeNuber,FlapScore,ZRA,ZRSD,XRA,XRSD,YPA,YPSD");//YValue4Range,YValue5Range,YValue6Range,YValue7Range,YValue8Range,
 
         // 確定最大長度
         int maxLength = new int[] { ChestPX.Count, ChestPY.Count, ChestPZ.Count, ChestRX.Count, ChestRY.Count, ChestRZ.Count }.Max();
 
         // 根據最大長度遍歷
         for (int i = 0; i < maxLength; i++)
-        {
-            string line = $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)},{GetValueOrDefault(YValue4Range, i)},{GetValueOrDefault(YValue5Range, i)},{GetValueOrDefault(YValue6Range, i)},{GetValueOrDefault(YValue7Range, i)},{GetValueOrDefault(YValue8Range, i)}";
+        {///*{GetValueOrDefault(YValue4Range, i)},{GetValueOrDefault(YValue5Range, i)},{GetValueOrDefault(YValue6Range, i)},{GetValueOrDefault(YValue7Range, i)},{GetValueOrDefault(YValue8Range, i)},
+            string line = $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)},{GetValueOrDefault(ObstaclesManerger.RandomValue2, i)},{GetValueOrDefault(FlapScore, i)}";
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {

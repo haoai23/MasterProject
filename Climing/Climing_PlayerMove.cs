@@ -468,15 +468,16 @@ public class Climing_PlayerMove : MonoBehaviour
             float leftLegAverageSpeed = LeftLegTimer.Sum() / LeftStepCount;//左腳的均速
             LeftLegAverageSpeed.text = leftLegAverageSpeed.ToString();
             Debug.Log("左腳的均速" + leftLegAverageSpeed);
+            ClimingSaveCSV();
         }
     }
-    public void StairTowerpSaveCSV(float ChestXRA, float ChestXRSD, float RightLegRZA, float RightLegRZSD, float LeftLegRZA, float LeftLegRZSD)
+    public void ClimingSaveCSV()
     {
-        string fileName = "StairTower.csv";
+        string fileName = "Climing.csv";
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,ChestXRA,ChestXRSD,RightLegRZA,RightLegRZSD,LeftLegRZA,LeftLegRZSD");
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ");
 
         // 確定最大長度
         int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
@@ -494,7 +495,7 @@ public class Climing_PlayerMove : MonoBehaviour
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {
-                line += $",{ChestXRA},{ChestXRSD},{RightLegRZA},{RightLegRZSD},{LeftLegRZA},{LeftLegRZSD}";
+                //line += $",{ChestXRA},{ChestXRSD},{RightLegRZA},{RightLegRZSD},{LeftLegRZA},{LeftLegRZSD}";
             }
             sb.AppendLine(line);
         }

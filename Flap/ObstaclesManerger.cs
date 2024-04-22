@@ -16,9 +16,13 @@ public class ObstaclesManerger : MonoBehaviour
         GameObject Obj = Instantiate(ObstaclesPrefabs[ObstaclesType], transform);//把物件生成在ObstaclesManeger物件底下
 
         while (RandomValue.Contains(Range)) 
-        { Range = Random.Range(4, 9); }
+        { 
+            Range = Random.Range(4, 9); 
+
+        }
         Debug.Log("間隔大小: " + Range);
         RandomValue.Add(Range);
+        RandomValue2.Add(Range);
         if (RandomValue.Count >= 5)
         {
             RandomValue.Clear();
@@ -33,6 +37,7 @@ public class ObstaclesManerger : MonoBehaviour
         ObjRB.constraints = RigidbodyConstraints.FreezeRotationZ;       
     }
     List<int> RandomValue = new List<int>();//紀錄產生過的數字
+    public static List<float> RandomValue2 = new List<float>();//紀錄產生過的數字，用於跟分數做比較
     
 
 }
