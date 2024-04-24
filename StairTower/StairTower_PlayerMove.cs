@@ -51,14 +51,15 @@ public class StairTower_PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey("space"))
+        if (Input.GetKey("b"))
         {
             StairTower_Player.GetComponent<Rigidbody2D>().velocity = Vector2.up * 2f;
             IsJumping = true;
         }
+        Debug.Log("isReady: " + isReady);
         if (isReady == false)
         { 
-            StairTower_DefinedViveTracker(Tracker1, Tracker2, Tracker3);
+            StairTower_DefinedViveTracker();
         }
         else if (isReady == true)
         {
@@ -236,7 +237,7 @@ public class StairTower_PlayerMove : MonoBehaviour
         collider.enabled = true;
     }
 
-    void StairTower_DefinedViveTracker(GameObject Tracker, GameObject Tracker1, GameObject Tracker2)
+    void StairTower_DefinedViveTracker()
     {
         RightLeg = GameObject.FindWithTag("RightLeg");
         LeftLeg = GameObject.FindWithTag("LeftLeg");
@@ -245,7 +246,7 @@ public class StairTower_PlayerMove : MonoBehaviour
         {
             isReady = true;
         }
-
+        Debug.Log("u.3");
         /*if (Tracker.transform.position.y > Tracker1.transform.position.y &&
             Tracker.transform.position.y > Tracker2.transform.position.y)
         {
@@ -309,8 +310,10 @@ public class StairTower_PlayerMove : MonoBehaviour
     public Text _LeftLegCalfStability, _RightLegCalfStability, _ChestStability, _Score,_Time;
     void AnalyzePlayerData()
     {
-        float ChestRightDifference = Chest.transform.position.z - RightLeg.transform.position.z;
-        float ChestLefttDifference = Chest.transform.position.z - LeftLeg.transform.position.z;
+        float ChestRightXDifference = Chest.transform.position.x - RightLeg.transform.position.x;
+        float ChestLeftXDifference = Chest.transform.position.x - LeftLeg.transform.position.x;
+        float ChestRightZDifference = Chest.transform.position.z - RightLeg.transform.position.z;
+        float ChestLeftZDifference = Chest.transform.position.z - LeftLeg.transform.position.z;
 
         _Time.text = StairTower_Timer.StairTower_i.ToString();
         if (!isGameOver)
@@ -322,11 +325,11 @@ public class StairTower_PlayerMove : MonoBehaviour
         float averageRightLeg, averageLeftLeg;
         if (isReady && RecordSuceesful && LeftLeg.transform.position.y > RightLeg.transform.position.y + 0.1f  && !isGameOver)//左腳抬起的時候
         {
-            AverageRightLeg.Add(ChestRightDifference);     
+            AverageRightLeg.Add(ChestRightZDifference);     
         }
         else if (isReady && RecordSuceesful && RightLeg.transform.position.y > LeftLeg.transform.position.y + 0.1f && !isGameOver) //#需要測試1f是否會太高原始值為0.1f
         {
-            AverageLeftLeg.Add(ChestLefttDifference);    
+            AverageLeftLeg.Add(ChestLeftXDifference);    
         }
         if (isGameOver)
         {

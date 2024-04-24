@@ -34,6 +34,7 @@ public class Flap_PlayerMove : MonoBehaviour
     List<float> FlapScore = new List<float>();
     bool Record = true;
     float RecordXRotation, RecordZRotation;
+    public static float RecordYPotation;
     List<float> YValue = new List<float>();//用來記錄過牆時的Y軸數據
     // Update is called once per frame
     void Update()
@@ -41,10 +42,11 @@ public class Flap_PlayerMove : MonoBehaviour
         IfPlayerDontMove();
         ReadViveTracker();
         HipsCube = GameObject.FindWithTag("Chest");
-        if (Record)
+        if (Record)//記錄一開始的數據
         {
             RecordXRotation = HipsCube.transform.eulerAngles.x;
             RecordZRotation = HipsCube.transform.eulerAngles.z;
+            RecordYPotation = HipsCube.transform.position.y;
             Record = false;
             Debug.Log("RecordXRotation: " + RecordXRotation);
             Debug.Log("RecordZRotation: " + RecordZRotation);
@@ -186,7 +188,7 @@ public class Flap_PlayerMove : MonoBehaviour
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RangeNuber,FlapScore,ZRA,ZRSD,XRA,XRSD,YPA,YPSD");//YValue4Range,YValue5Range,YValue6Range,YValue7Range,YValue8Range,
+        sb.AppendLine("ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,YValue4Range,YValue5Range,YValue6Range,FlapScore,ZRA,ZRSD,XRA,XRSD,YPA,YPSD");//YValue4Range,YValue5Range,YValue6Range,YValue7Range,YValue8Range,
 
         // 確定最大長度
         int maxLength = new int[] { ChestPX.Count, ChestPY.Count, ChestPZ.Count, ChestRX.Count, ChestRY.Count, ChestRZ.Count }.Max();
@@ -194,7 +196,8 @@ public class Flap_PlayerMove : MonoBehaviour
         // 根據最大長度遍歷
         for (int i = 0; i < maxLength; i++)
         {///*{GetValueOrDefault(YValue4Range, i)},{GetValueOrDefault(YValue5Range, i)},{GetValueOrDefault(YValue6Range, i)},{GetValueOrDefault(YValue7Range, i)},{GetValueOrDefault(YValue8Range, i)},
-            string line = $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)},{GetValueOrDefault(ObstaclesManerger.RandomValue2, i)},{GetValueOrDefault(FlapScore, i)}";
+            string line = $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
+                $"{GetValueOrDefault(YValue4Range, i)},{GetValueOrDefault(YValue5Range, i)},{GetValueOrDefault(YValue6Range, i)},{GetValueOrDefault(ObstaclesManerger.RandomValue2, i)},{GetValueOrDefault(FlapScore, i)}";
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {

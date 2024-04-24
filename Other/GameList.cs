@@ -1,3 +1,4 @@
+using OpenCvSharp.Tracking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,14 +19,14 @@ public class GameList : MonoBehaviour
     public static string userID, userWeight, userBithday_Date;
     private void Update()
     {
-        if (UserID != null && UserWeight != null && UserBithday_Date != null)
+        /*if ()
         {
             Debug.Log("UserID: " + UserID.text);
             Debug.Log("UserWeight: " + UserWeight.text);
             Debug.Log("UserBithday_Date: " + UserBithday_Date.text);
             
-        }
-        if (Input.GetKeyDown("space"))//可以加個防呆以免按錯
+        }*/
+        if (Input.GetKeyDown("space") & UserID != null && UserWeight != null && UserBithday_Date != null)//可以加個防呆以免按錯
         {
             _UserInterface.SetActive(false);
             _GameList.SetActive(true);
@@ -44,6 +45,10 @@ public class GameList : MonoBehaviour
             userBithday_Date = UserBithday_Date.text;
             UserInfomationCeateFile(UserID, UserBithday_Date);
             
+        }
+        if(UserID != null && UserWeight != null && PlayerPrefs.GetString(timePath)!= timePath)
+        {
+            TrackerManeger.Tracker.Clear();
         }
     }
     public static string filePath, timePath;
@@ -71,6 +76,7 @@ public class GameList : MonoBehaviour
             //dataTable(timePath);
         }    
         PlayerPrefs.SetString("timePath", timePath);
+        PlayerPrefs.SetString("filename", fileName);
     }
     public void Game_Bowing()
     {
@@ -96,9 +102,12 @@ public class GameList : MonoBehaviour
     {
         SceneManager.LoadScene("UserInterface");
     }
-    public void Gmaelist()
-    {        
+    public static bool OIP = false;//OptionIsPress
+    public void Gamelist()
+    {       
+        OIP = true;
         _UserInterface.SetActive(false);
         _GameList.SetActive(true);
+        
     }
 }

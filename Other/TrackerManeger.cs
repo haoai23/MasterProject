@@ -26,7 +26,7 @@ public class TrackerManeger : MonoBehaviour
         if (Objs.Length > 1)
         {
             Destroy(this);
-        }
+        } 
 
     }
     private void Update()
@@ -36,10 +36,6 @@ public class TrackerManeger : MonoBehaviour
             ReadHTCViveTracker();
             Debug.Log("是在哈瞜");
         }
-    }
-    private void FixedUpdate()
-    {
-        
     }
     public static List<GameObject> Tracker = new List<GameObject>() ;
 
@@ -66,7 +62,7 @@ public class TrackerManeger : MonoBehaviour
         {
             tracker.tag = tags[tagIndex];
             tagIndex++;
-            Debug.Log("tagindex" + tagIndex);
+            Debug.Log("TagIndex" + tagIndex);
         }
 
     }
