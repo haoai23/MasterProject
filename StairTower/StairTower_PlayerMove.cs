@@ -100,6 +100,7 @@ public class StairTower_PlayerMove : MonoBehaviour
             }
         }
     }
+    List<float> WhenTiptoes = new List<float>();
     private void PlayerMove() 
     {
         //StairTower_Player.transform.Translate(new Vector2(2.3f * Time.deltaTime * direction , 0));
@@ -112,10 +113,11 @@ public class StairTower_PlayerMove : MonoBehaviour
         {
             StairTower_Player.transform.Translate(new Vector2(-0.03f, 0));
         }
-        else if (Chest.transform.position.y - ChestNoTiptoes > PersonalStandardHeight * 0.8)//墊腳的高度判斷是否有墊腳尖，高於最大值的九成
+        else if (Chest.transform.position.y - ChestNoTiptoes > PersonalStandardHeight * 0.8)//墊腳的高度判斷是否有墊腳尖，高於最大值的八成
         {
             IsJumping = true;
             StairTower_Player.GetComponent<Rigidbody2D>().velocity = Vector2.up *2f;
+            WhenTiptoes.Add(Chest.transform.position.y);
         }
         else
         {
@@ -125,7 +127,7 @@ public class StairTower_PlayerMove : MonoBehaviour
     }
     float RightLegTiptoes, LeftLegTiptoes, ChestTiptoes;
     float RightLegNoTiptoes, LeftLegNoTiptoes, ChestNoTiptoes;
-
+    float ChestXPNoTiptoes, ChestZPNoTiptoes;//用來分析受測者晃動
     int i = 0;
     float PersonalStandardHeight = 0;
     bool RecordSuceesful = false;
@@ -140,6 +142,8 @@ public class StairTower_PlayerMove : MonoBehaviour
                 RightLegNoTiptoes = RightLeg.transform.position.y;
                 LeftLegNoTiptoes = LeftLeg.transform.position.y;
                 ChestNoTiptoes = Chest.transform.position.y;
+                ChestXPNoTiptoes = Chest.transform.position.x;
+                ChestZPNoTiptoes = Chest.transform.position.z;
                 Debug.Log(i + ": OK");                
             }
             if (i == 2 && RightLeg != null && LeftLeg != null && Chest != null)//有點腳尖
@@ -315,6 +319,7 @@ public class StairTower_PlayerMove : MonoBehaviour
         float ChestRightZDifference = Chest.transform.position.z - RightLeg.transform.position.z;
         float ChestLeftZDifference = Chest.transform.position.z - LeftLeg.transform.position.z;
 
+
         _Time.text = StairTower_Timer.StairTower_i.ToString();
         if (!isGameOver)
         { 
@@ -359,16 +364,34 @@ public class StairTower_PlayerMove : MonoBehaviour
             Debug.Log("LeftVariance: " + LeftVariance);
             Debug.Log("LeftStandardDeviation: " + LeftStandardDeviation);
 
-            StairTowerpSaveCSV(AbdominalXrotationMean, StandardValue, RightsumOfSquares, RightStandardDeviation, LeftsumOfSquares, LeftStandardDeviation, StairTower_Timer.StairTower_i, countStep, StairTower_Score);
+            //雙腳墊腳尖的穩定度
+            float WhenTiptoesAverage = WhenTiptoes.Average();
+            float WhenTiptoesOfSquare = WhenTiptoes.Sum(x => Mathf.Pow(x - WhenTiptoesAverage, 2));//縮寫WTOS;
+            float WTOSVariance = WhenTiptoesOfSquare / WhenTiptoes.Count;
+            float WTSD = Mathf.Sqrt(WTOSVariance);
+
+
+            StairTowerpSaveCSV(AbdominalXrotationMean, StandardValue, RightsumOfSquares, RightStandardDeviation, LeftsumOfSquares, LeftStandardDeviation, WTOSVariance, StairTower_Timer.StairTower_i, countStep, StairTower_Score);
         }
     }
-    public void StairTowerpSaveCSV(float ChestXRA, float ChestXRSD, float RightLegCalfStability, float RightLegCalfStabilitySD, float LeftLegCalfStability, float LeftLegCalfStabilityYSD, float time, int stepcount, int score)
+    List<float> RXZValue = new List<float>();
+    List<float> LXZValue = new List<float>();
+    void AddXZValue(bool isRight, float XValue, float ZValue)//紀錄XZ數值以用來計算歐基里德距離 
+    {
+        if (isRight)
+        {
+
+        }
+        
+    }
+
+    public void StairTowerpSaveCSV(float ChestXRA, float ChestXRSD, float RightLegCalfStability, float RightLegCalfStabilitySD, float LeftLegCalfStability, float LeftLegCalfStabilityYSD,float WTOSVariance, float time, int stepcount, int score)
     {
         string fileName = "StairTower.csv";
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,ChestXRA,ChestXRSD,RightLegCalfStability,RightLegCalfStabilitySD,LeftLegCalfStability,LeftLegCalfStabilityYSD,time,stepcount,score");
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,WhenTiptos,ChestXRA,ChestXRSD,RightLegCalfStability,RightLegCalfStabilitySD,LeftLegCalfStability,LeftLegCalfStabilityYSD,WTOSVariance,time,stepcount,score");
 
         // 確定最大長度
         int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
@@ -381,12 +404,12 @@ public class StairTower_PlayerMove : MonoBehaviour
         {
             string line = $"{GetValueOrDefault(LeftLegPX, i)},{GetValueOrDefault(LeftLegPY, i)},{GetValueOrDefault(LeftLegPZ, i)},{GetValueOrDefault(LeftLegRX, i)},{GetValueOrDefault(LeftLegRY, i)},{GetValueOrDefault(LeftLegRZ, i)}," +
                           $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
-                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)}";
+                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)},{GetValueOrDefault(WhenTiptoes, i)}";
 
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {
-                line += $",{ChestXRA},{ChestXRSD},{RightLegCalfStability},{RightLegCalfStabilitySD},{LeftLegCalfStability},{LeftLegCalfStabilityYSD},{time},{stepcount},{score}";
+                line += $",{ChestXRA},{ChestXRSD},{RightLegCalfStability},{RightLegCalfStabilitySD},{LeftLegCalfStability},{LeftLegCalfStabilityYSD},{WTOSVariance},{time},{stepcount},{score}";
             }
             sb.AppendLine(line);
         }
