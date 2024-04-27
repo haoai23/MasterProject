@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor.AssetImporters;
 using UnityEngine;
@@ -330,11 +331,13 @@ public class StairTower_PlayerMove : MonoBehaviour
         float averageRightLeg, averageLeftLeg;
         if (isReady && RecordSuceesful && LeftLeg.transform.position.y > RightLeg.transform.position.y + 0.1f  && !isGameOver)//左腳抬起的時候
         {
-            AverageRightLeg.Add(ChestRightZDifference);     
+            AverageRightLeg.Add(ChestRightZDifference);
+            AddXZValue(false);
         }
         else if (isReady && RecordSuceesful && RightLeg.transform.position.y > LeftLeg.transform.position.y + 0.1f && !isGameOver) //#需要測試1f是否會太高原始值為0.1f
         {
-            AverageLeftLeg.Add(ChestLeftXDifference);    
+            AverageLeftLeg.Add(ChestLeftXDifference);
+            AddXZValue(true);
         }
         if (isGameOver)
         {
@@ -376,11 +379,18 @@ public class StairTower_PlayerMove : MonoBehaviour
     }
     List<float> RXZValue = new List<float>();
     List<float> LXZValue = new List<float>();
-    void AddXZValue(bool isRight, float XValue, float ZValue)//紀錄XZ數值以用來計算歐基里德距離 
+    void AddXZValue(bool isRight)//紀錄XZ數值以用來計算歐基里德距離 
     {
+        Vector2 OriginalXZ = new Vector2(ChestXPNoTiptoes, ChestZPNoTiptoes);
+        Vector2 LaterXZ = new Vector2(Chest.transform.position.x, Chest.transform.position.x);
+        float XZDistane = Vector2.Distance(OriginalXZ, LaterXZ);
         if (isRight)
         {
-
+            RXZValue.Add(XZDistane);
+        }
+        else
+        {
+            LXZValue.Add(XZDistane);
         }
         
     }
