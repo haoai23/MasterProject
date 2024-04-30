@@ -43,7 +43,7 @@ public class Climing_CameraFollowPlayer : MonoBehaviour
         //Debug.Log("NowCamera: " + NowCamera);
         //Debug.Log("PlayerDistance: " + PlayerDistance);
         
-        transform.position = Vector3.Lerp(LastCamera,NowCamera, 1f);
+        transform.position = Vector3.Lerp(LastCamera,NowCamera, 5f);
         RecordLastPlayer = RecordNowPlayer;
         LastCamera = NowCamera;
 

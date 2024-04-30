@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEditor;
 using System.Text;
+using UnityEngine.SceneManagement;
 
 public class Flap_PlayerMove : MonoBehaviour
 {
@@ -36,6 +37,19 @@ public class Flap_PlayerMove : MonoBehaviour
     float RecordXRotation, RecordZRotation;
     public static float RecordYPotation;
     List<float> YValue = new List<float>();//用來記錄過牆時的Y軸數據
+    public GameObject RestartButton;
+    public static int FlapSceneTimes = 0;
+    private void Start()
+    {
+        FlapSceneTimes++;
+        Debug.Log("FlapSceneTimes" + FlapSceneTimes);
+        if (FlapSceneTimes >1 )
+        {
+            Flap_GameStartandEnd gameController = RestartButton.GetComponent<Flap_GameStartandEnd>();
+            gameController.RestartGame();
+            FlapSceneTimes = 0;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -71,6 +85,7 @@ public class Flap_PlayerMove : MonoBehaviour
                 { 
                     case 4:
                         YValue4Range.Add(HipsCube.transform.position.y);
+                        Debug.Log("看起來有喔");
                         break;
                     case 5:
                         YValue5Range.Add(HipsCube.transform.position.y);

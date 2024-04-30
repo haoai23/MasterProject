@@ -26,7 +26,7 @@ public class GameList : MonoBehaviour
             Debug.Log("UserBithday_Date: " + UserBithday_Date.text);
             
         }*/
-        if (Input.GetKeyDown("space") & UserID != null && UserWeight != null && UserBithday_Date != null)//可以加個防呆以免按錯
+        if (Input.GetKeyDown("space") /*& UserID != null && UserWeight != null && UserBithday_Date != null*/)//可以加個防呆以免按錯
         {
             _UserInterface.SetActive(false);
             _GameList.SetActive(true);

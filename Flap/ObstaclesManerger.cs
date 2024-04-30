@@ -16,7 +16,8 @@ public class ObstaclesManerger : MonoBehaviour
         // Range = Random.Range(4, 9);//隨機產生牆的高度
         float SDH = Flap_PlayerMove.RecordYPotation / 7;//根據使用者腹部到地板之間的高度除了最矮高度換算成牆的高度 SDF=標準高度
         Range = WallHeight.First()+SDH;//提取第一個元素
-        if (WallHeight.Count > 0)//當牆是最後一個數字時就回到最一開始所定義的數列
+        Debug.Log("WallHeight[0]" + WallHeight[0]);
+        if (WallHeight.Count > 1)//當牆是最後一個數字時就回到最一開始所定義的數列
         {
             WallHeight.RemoveAt(0);
         }
