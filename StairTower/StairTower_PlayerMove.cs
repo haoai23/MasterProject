@@ -216,6 +216,9 @@ public class StairTower_PlayerMove : MonoBehaviour
             StairTower_Score += 1;
             StairTowerScore_Text.text = StairTower_Score.ToString();
             Destroy(collision.gameObject);
+
+            StairTower_PrefabMove.MoveSpeed += StairTower_Score / 10;
+            Debug.Log("MoveSpeed" + StairTower_PrefabMove.MoveSpeed);
         }
     }
     public static bool isGameOver = false;//判斷是否遊戲結束了以方便分析
@@ -223,8 +226,7 @@ public class StairTower_PlayerMove : MonoBehaviour
     {
         if (collision.gameObject.tag == "StairTower_Stairline")
         {
-            StairTower_PrefabMove.MoveSpeed = 0.3f + Time.time/100;
-
+            StairTower_PrefabMove.MoveSpeed = 0.3f ;
         }
         else if (collision.gameObject.name == "Deathline")
         {

@@ -49,6 +49,7 @@ public class GameList : MonoBehaviour
         if(UserID != null && UserWeight != null && PlayerPrefs.GetString(timePath)!= timePath)
         {
             TrackerManeger.Tracker.Clear();
+            TrackerManeger.tagIndex = 0;
         }
     }
     public static string filePath, timePath;

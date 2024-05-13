@@ -7,6 +7,8 @@ using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 using System.Linq;
+using System.IO;
+using System.Text;
 
 public  class Bowing_PlayerMove : MonoBehaviour
 {
@@ -21,7 +23,28 @@ public  class Bowing_PlayerMove : MonoBehaviour
     float RightLegEulerAnglesValue, LeftLegEulerAnglesValue, ChestEulerAnglesValue;//用來記錄第一次的原始數據
     float RightLegYEulerAnglesValue, LeftLegYEulerAnglesValue;//用來記錄第一次的原始數據
     public static bool isGameOver = false;
-  /*  public Text _GameSpendTime, _MovingAnegle, _AverageSpeed, _RightLeg, _LeftLeg;*/
+
+    List<float> LeftLegPX = new List<float>();
+    List<float> LeftLegPY = new List<float>(); 
+    List<float> LeftLegPZ = new List<float>();
+    List<float> LeftLegRX = new List<float>();
+    List<float> LeftLegRY = new List<float>();
+    List<float> LeftLegRZ = new List<float>();
+
+    List<float> ChestPX = new List<float>();
+    List<float> ChestPY = new List<float>();
+    List<float> ChestPZ = new List<float>();
+    List<float> ChestRX = new List<float>();
+    List<float> ChestRY = new List<float>();
+    List<float> ChestRZ = new List<float>();
+
+    List<float> RightLegPX = new List<float>();
+    List<float> RightLegPY = new List<float>();
+    List<float> RightLegPZ = new List<float>();
+    List<float> RightLegRX = new List<float>();
+    List<float> RightLegRY = new List<float>();
+    List<float> RightLegRZ = new List<float>();
+    /*  public Text _GameSpendTime, _MovingAnegle, _AverageSpeed, _RightLeg, _LeftLeg;*/
     // Start is called before the first frame update
     void Start()
     {
@@ -49,8 +72,29 @@ public  class Bowing_PlayerMove : MonoBehaviour
         
         if (isReady & !isGameOver)
         {
-            RightLegMoveAngle.Add(RightLeg.transform.eulerAngles.x - RightLegEulerAnglesValue);
-            LeftLegMoveAngle.Add(LeftLeg.transform.eulerAngles.x - LeftLegEulerAnglesValue);
+            /*RightLegMoveAngle.Add(RightLeg.transform.eulerAngles.x - RightLegEulerAnglesValue);
+            LeftLegMoveAngle.Add(LeftLeg.transform.eulerAngles.x - LeftLegEulerAnglesValue);*/
+
+            LeftLegPX.Add(LeftLeg.transform.position.x);
+            LeftLegPY.Add(LeftLeg.transform.position.y);
+            LeftLegPZ.Add(LeftLeg.transform.position.z);
+            LeftLegRX.Add(LeftLeg.transform.eulerAngles.x);
+            LeftLegRY.Add(LeftLeg.transform.eulerAngles.y);
+            LeftLegRZ.Add(LeftLeg.transform.eulerAngles.z);
+
+            ChestPX.Add(Chest.transform.position.x);
+            ChestPY.Add(Chest.transform.position.y);
+            ChestPZ.Add(Chest.transform.position.z);
+            ChestRX.Add(Chest.transform.eulerAngles.x);
+            ChestRY.Add(Chest.transform.eulerAngles.y);
+            ChestRZ.Add(Chest.transform.eulerAngles.z);
+
+            RightLegPX.Add(LeftLeg.transform.position.x);
+            RightLegPY.Add(LeftLeg.transform.position.y);
+            RightLegPZ.Add(LeftLeg.transform.position.z);
+            RightLegRX.Add(LeftLeg.transform.eulerAngles.x);
+            RightLegRY.Add(LeftLeg.transform.eulerAngles.y);
+            RightLegRZ.Add(LeftLeg.transform.eulerAngles.z);
             RecordMoveAngle();
         }
         if (isGameOver)
@@ -228,7 +272,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
             LeftLegMoveAngle.Add(RecordNewLYValue);
             RecordLastLYValue = RecordNewLYValue;
         }
-        else { RecordLastRYValue = RecordNewLYValue; }
+        else { RecordLastLYValue = RecordNewLYValue; }
         Debug.Log("IsRecord");
     }
     List<float> RightLegValue = new List<float>();
@@ -239,7 +283,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
     public Text RightLegSandardValue, LeftLegSandardValue, _AverageSpeed, _RightMoveAngle, _LeftMoveAngle;
     void Bowing_DataAnalysis()
     {
-        //雙腳各自的分析
+        /*//雙腳各自的分析
         float RightLegZRotationValueAverage = RightLegValue.Average();
         float RightLegZRotationSumOfSquares = RightLegValue.Sum(x => Mathf.Pow(x - RightLegZRotationValueAverage, 2));
         float RightLegZRotationvariance = RightLegZRotationSumOfSquares / RightLegValue.Count;
@@ -251,14 +295,60 @@ public  class Bowing_PlayerMove : MonoBehaviour
         float LeftLegZRotationvariance = LeftLegZRotationSumOfSquares / LeftLegValue.Count;
         float LeftLegZRotationStandardValue = Mathf.Sqrt(LeftLegZRotationvariance);
         LeftLegSandardValue.text = LeftLegZRotationStandardValue.ToString();
-        Debug.Log("左腳標準差" + LeftLegZRotationStandardValue);
+        Debug.Log("左腳標準差" + LeftLegZRotationStandardValue);*/
         //平均速度
         _AverageSpeed.text = AverageSpeed.Average().ToString();
         Debug.Log("移動速度: " + _AverageSpeed.text);
-        //平均移動角度
+        //平均移動角度                                                      
         _LeftMoveAngle.text = LeftLegMoveAngle.Average().ToString();
         _RightMoveAngle.text = RightLegMoveAngle.Average().ToString();
 
+        BowingSaveCSV();
+    }
+    public void BowingSaveCSV()
+    {
+        string fileName = "Bowing.csv";
+        string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
-    }    
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ");
+
+        // 確定最大長度
+        int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
+                                    ChestPX.Count, ChestPY.Count, ChestPZ.Count, ChestRX.Count, ChestRY.Count, ChestRZ.Count,
+                                    RightLegPX.Count, RightLegPY.Count, RightLegPZ.Count, RightLegRX.Count, RightLegRY.Count, RightLegRZ.Count}.Max();
+
+
+        // 根據最大長度遍歷
+        for (int i = 0; i < maxLength; i++)
+        {
+            string line = $"{GetValueOrDefault(LeftLegPX, i)},{GetValueOrDefault(LeftLegPY, i)},{GetValueOrDefault(LeftLegPZ, i)},{GetValueOrDefault(LeftLegRX, i)},{GetValueOrDefault(LeftLegRY, i)},{GetValueOrDefault(LeftLegRZ, i)}," +
+                          $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
+                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)}";
+
+            // 在每一行的末尾添加統計數據
+            if (i == 0) // 假設統計數據只需添加一次
+            {
+                //line += $",{ChestXRA},{ChestXRSD},{RightLegCalfStability},{RightLegCalfStabilitySD},{LeftLegCalfStability},{LeftLegCalfStabilityYSD},{WTOSVariance},{time},{stepcount},{score}";
+            }
+            sb.AppendLine(line);
+        }
+
+        // 使用 FileStream 和 StreamWriter 寫入文件
+        using (FileStream fs = new FileStream(timePath, FileMode.Create, FileAccess.Write, FileShare.None))
+        using (StreamWriter sw = new StreamWriter(fs))
+        {
+            sw.Write(sb.ToString());
+        }
+    }
+
+    // 輔助方法來處理可能的索引越界問題
+    private string GetValueOrDefault(List<float> list, int index)
+    {
+        if (index < list.Count)
+        {
+            return list[index].ToString();
+        }
+        return "N/A"; // 或者您可以選擇返回空字符串 ""
+    }
 }

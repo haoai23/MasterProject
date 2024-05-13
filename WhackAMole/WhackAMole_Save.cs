@@ -19,7 +19,7 @@ public class WhackAMole_Save : MonoBehaviour
     {
         
     }
-    void ReadWhackAMoleGameInformationData()
+    /*void ReadWhackAMoleGameInformationData()
     {
         string score =WhackAMole_Score.Score.ToString();
         string The_first_quadrant_score_actually_obtained = WhackAMole_SpawnPrefab.FirstQuadranScore.ToString();//實際上要獲得的分數
@@ -29,5 +29,5 @@ public class WhackAMole_Save : MonoBehaviour
         
 
 
-    }
+    }*/
 }

@@ -14,9 +14,10 @@ public class WhackAMole_SpawnPrefab : MonoBehaviour
     float Timer_i = 0;
     float LastSpawnTime;
     public Text ShowReactionTime;
-    public List<float> AverageReactionTime;
+    public static List<float> AverageReactionTime = new List<float>();
     public Text AverageReactionTime_Text;
     public Text GameReviews_Text;
+    public static List<float> RecordMolePosition = new List<float>();
 
     // Start is called before the first frame update
     void Start()
@@ -41,9 +42,10 @@ public class WhackAMole_SpawnPrefab : MonoBehaviour
     {
         int PositionIndex = Random.Range(0, SpawnPosition.Length);
         bool isoccupied = PositionIsOcupied(PositionIndex);
-
+        
         if (!isoccupied & Mole == null && WhackAMole_PlayerMove.AtOriginalPoint)//在這邊新增位置的起始點
         {
+            RecordMolePosition.Add(PositionIndex);//紀錄地鼠出現在哪個洞
             if (PositionIndex != 1 && PositionIndex != 2 && PositionIndex != 5 && PositionIndex != 6)
             {
                 Mole = Instantiate(SpawnPrefab[1], SpawnPosition[PositionIndex].transform.position, SpawnPosition[PositionIndex].transform.rotation);
@@ -103,30 +105,27 @@ public class WhackAMole_SpawnPrefab : MonoBehaviour
 
     void WhackAMole_ReactionTime(float spawnTime, int PositionIndex)
     {
-
-        if (LastSpawnTime > 0)
+        if (spawnTime > 0)
         {
-            float ReactionTime = spawnTime - LastSpawnTime;
-            //Debug.Log("Time Difference: " + ReactionTime);
+            float ReactionTime = spawnTime - WhackAMole_PlayerMove.LeaveAPTime;
+            Debug.Log("ReactionTime: " + ReactionTime);
             QuadrantScore(ReactionTime, PositionIndex);//各象限的分數
             AverageReactionTime.Add(ReactionTime);
             float averageReactionTime = AverageReactionTime.Average();
-            ShowReactionTime.text = ReactionTime.ToString();
+            ShowReactionTime.text = ReactionTime.ToString("F2");
             AverageReactionTime_Text.text = averageReactionTime.ToString();
-            Debug.Log("averageReactionTime: " + averageReactionTime);
+            Debug.Log("averageReactionTime: " + averageReactionTime);         
         }
-
-        LastSpawnTime = spawnTime;
     }
 
-    public static int TotalFirstQuadranScore = 0;//理論上要獲得的分數
-    public static int TotalSecondQuadranScore = 0;
-    public static int TotalThirdQuadranScore = 0;
-    public static int TotalFourthQuadranScore = 0;
-    public static int FirstQuadranScore = 0;//實際上的分數
-    public static int SecondQuadranScore = 0;
-    public static int ThirdQuadranScore = 0;
-    public static int FourthQuadranScore = 0;
+    public int TotalFirstQuadranScore = 0;//理論上要獲得的分數
+    public  int TotalSecondQuadranScore = 0;
+    public int TotalThirdQuadranScore = 0;
+    public int TotalFourthQuadranScore = 0;
+    public int FirstQuadranScore = 0;//實際上的分數
+    public int SecondQuadranScore = 0;
+    public int ThirdQuadranScore = 0;
+    public int FourthQuadranScore = 0;
     public static float ActuallyFirstQuadraScore = 0;
     public static float ActuallySecondQuadranScore = 0;
     public static float ActuallyThirdQuadranScore = 0;
@@ -147,7 +146,6 @@ public class WhackAMole_SpawnPrefab : MonoBehaviour
                 FirstQuadranScore += 1;//實際上獲得的分數                               
             }
             ActuallyFirstQuadraScore = (float)FirstQuadranScore / TotalFirstQuadranScore;
-            Debug.Log("Time Difference: " + ReactionTime);
 
             //Debug.Log("ActuallyFirstQuadranScore: " + ActuallyFirstQuadraScore);
         }

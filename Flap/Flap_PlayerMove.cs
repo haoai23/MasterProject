@@ -81,10 +81,25 @@ public class Flap_PlayerMove : MonoBehaviour
             if (Flap_Score2.IsTouch)
             {
                 YValue.Add(HipsCube.transform.position.y);
-                switch (ObstaclesManerger.Range) 
+                if(ObstaclesManerger.Range >= 4& ObstaclesManerger.Range<5)
+                {
+                    YValue4Range.Add(HipsCube.transform.position.y);
+                    Debug.Log("YValue4Range");
+                }
+                else if (ObstaclesManerger.Range >= 5 & ObstaclesManerger.Range < 6)
+                {
+                    YValue5Range.Add(HipsCube.transform.position.y);
+                    Debug.Log("YValue5Range");
+                }
+                else if (ObstaclesManerger.Range >= 6 & ObstaclesManerger.Range < 7)
+                {
+                    YValue6Range.Add(HipsCube.transform.position.y);
+                    Debug.Log("YValue6Range");
+                }
+                /*switch (ObstaclesManerger.Range) 
                 { 
                     case 4:
-                        YValue4Range.Add(HipsCube.transform.position.y);
+                        
                         Debug.Log("看起來有喔");
                         break;
                     case 5:
@@ -102,7 +117,7 @@ public class Flap_PlayerMove : MonoBehaviour
                     default:
                         break;
 
-                }
+                }*/
                     
 
             }
@@ -212,11 +227,11 @@ public class Flap_PlayerMove : MonoBehaviour
         for (int i = 0; i < maxLength; i++)
         {///*{GetValueOrDefault(YValue4Range, i)},{GetValueOrDefault(YValue5Range, i)},{GetValueOrDefault(YValue6Range, i)},{GetValueOrDefault(YValue7Range, i)},{GetValueOrDefault(YValue8Range, i)},
             string line = $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
-                $"{GetValueOrDefault(YValue4Range, i)},{GetValueOrDefault(YValue5Range, i)},{GetValueOrDefault(YValue6Range, i)},{GetValueOrDefault(ObstaclesManerger.RandomValue2, i)},{GetValueOrDefault(FlapScore, i)}";
+                $"{GetValueOrDefault(YValue4Range, i)},{GetValueOrDefault(YValue5Range, i)},{GetValueOrDefault(YValue6Range, i)},{GetValueOrDefault(FlapScore, i)}";
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {
-                line += $",{ZRA},{ZRSD},{XRA},{XRSD},{YPA},{YPSD},{score}";
+                line += $",{ZRA},{ZRSD},{XRA},{XRSD},{YPA},{YPSD}";
             }
             sb.AppendLine(line);
         }

@@ -32,6 +32,7 @@ public class Flap_GameStartandEnd : MonoBehaviour
     {
         SceneManager.LoadScene("Flap");
         StartScreenCanvas.SetActive(true);
+        Flap_PlayerMove.isGameOver = false;
         Timer.Start_Timer = false;
         Timer.Timer_i = 90;
         Flap_Score.Score = 0;

@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Valve.VR;
@@ -16,7 +17,7 @@ public class TrackerManeger : MonoBehaviour
 {
     int TrackerNO_i = 0 ;
     string[] tags = { "LeftHand", "LeftLeg","Chest", "RightLeg", "RightHand"};//由左到右
-    int tagIndex = 0; // 用于在 tags 數列中循环使用tag
+    public static int tagIndex = 0; // 用于在 tags 數列中循环使用tag
     public GameObject[] trackedObjects;
 
     private void Start()
@@ -97,6 +98,10 @@ public class TrackerManeger : MonoBehaviour
         // 如果感測器位置不在不希望的位置附近，返回false
         return false;
     }
-
+    void ReloadCurrentScene()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene("scene");
+    }
    
 }

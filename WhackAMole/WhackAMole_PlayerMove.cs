@@ -28,6 +28,9 @@ public class WhackAMole_PlayerMove : MonoBehaviour
     public static bool WhackAMole_StartTimer = false;
     public GameObject GameOver_Panel, ReactionTime_Image, Time_Image, OrignalPoint, MainCamera;
 
+    public static int WhackAMoleSceneTimes = 0;//進入次數
+    public GameObject RestartButton;
+
     List<float> RightHandPX = new List<float>();
     List<float> RightHandPY = new List<float>();
     List<float> RightHandPZ = new List<float>();
@@ -42,17 +45,33 @@ public class WhackAMole_PlayerMove : MonoBehaviour
     List<float> LeftHandRY = new List<float>();
     List<float> LeftHandRZ = new List<float>();
 
+    List<float> PunchTime = new List<float>();
+    List<float> ClosingTime = new List<float>();
+    float AveragePunchTime, AverageClosing;
+    private void Start()
+    {
+        WhackAMoleSceneTimes++;
+        Debug.Log("WhackAMoleSceneTimes: " + WhackAMoleSceneTimes);
+        if (WhackAMoleSceneTimes > 1)
+        {
+            WhackAMoleSceneTimes = 0;
+            WhackAMole_GameController gameController = RestartButton.GetComponent<WhackAMole_GameController>();
+            gameController.RestatGame();
+
+        }
+    }
     // Update is called once per frame 
     void Update()
     {
         DefineTracker(Tracker1, Tracker2);
         WhackAMolePlayerMove();
-        if (isReady)
+        if (isReady & WhackAMole_Timer.WhackAMoleTimer_i != 0)
         {
-            RecordPlayerPosition(Tracker1, Tracker2);
+            RecordPlayerPosition(RightHandT, LeftHandT);
         }
-        if (isReady & HAttitudeCorrection & VAttitudeCorrection)//紀錄數據
+        if (isReady & HAttitudeCorrection & VAttitudeCorrection & WhackAMole_Timer.WhackAMoleTimer_i != 0 )//紀錄數據
         {
+
             RightHandPX.Add(RightHandT.transform.position.x);
             RightHandPY.Add(RightHandT.transform.position.y);
             RightHandPZ.Add(RightHandT.transform.position.z);
@@ -67,9 +86,14 @@ public class WhackAMole_PlayerMove : MonoBehaviour
             LeftHandRY.Add(LeftHandT.transform.eulerAngles.y);
             LeftHandRZ.Add(LeftHandT.transform.eulerAngles.z);
 
-
+            Debug.Log("WhackAMole遊戲讀取");
         }
-    }
+        if (WhackAMole_Timer.WhackAMoleTimer_i == 0)
+        {
+            WhackAMoleSaveCSV();
+            Debug.Log("WhackAMole遊戲存檔");
+        }
+    } 
        
     void DefineTracker(GameObject Tracker1, GameObject Tracker2)
         {
@@ -97,7 +121,10 @@ public class WhackAMole_PlayerMove : MonoBehaviour
         LeftHand.transform.position = new Vector3(-LeftHandT.transform.position.x * XProportion, LeftHandT.transform.position.y * YProportion, LeftHandT.transform.position.z);
         
     }
-    float PunchSpeed = 0, punchspeed1 = 0, punchspeed0 = 0;
+    float PunchSpeed = 0, punchspeed1 = 0, punchspeed0 = 0 ;
+    float RPunchTime  , RClosingTime;
+
+    public static float LeaveAPTime= 0;//離開原始點的時間
     void OnCollisionEnter(Collision collision)        
     {
         
@@ -110,8 +137,13 @@ public class WhackAMole_PlayerMove : MonoBehaviour
             {
                 punchspeed0 = Time.time;
             }
+            RPunchTime = punchspeed0 - LeaveAPTime;//出拳速度
+            if(RPunchTime > 0) {  PunchTime.Add(RPunchTime);}
+           
             //DestroyPrefabTime = Time.time;
-            //Debug.Log(" DestroyPrefabTime: " + DestroyPrefabTime);
+            Debug.Log(" PunchTime: " + RPunchTime);
+            Debug.Log(" PunchTime數列長度: " + PunchTime.Count);
+
         }
         else if (collision.gameObject.tag == "WhackAMole_Flower")
         {
@@ -128,15 +160,26 @@ public class WhackAMole_PlayerMove : MonoBehaviour
                 {
                     punchspeed1 = Time.time;
                 }
-                PunchSpeed = punchspeed0 - punchspeed1;
+                RClosingTime = punchspeed1 - punchspeed0;//收拳速度
+                if(RClosingTime >0) { ClosingTime.Add(RClosingTime);}
+                
                 //punchspeed1 = punchspeed0;
-                Debug.Log("PunchSpeed" + PunchSpeed);
+                Debug.Log("ClosingTime" + RClosingTime);
+                Debug.Log("ClosingTime數列長度" + ClosingTime.Count);
             }
         }
         IEnumerator DeactivateDeductBlood(float delay)
         {
             yield return new WaitForSeconds(delay);
             DeductBlood.SetActive(false);
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.name == "OriginalPoint")
+        {
+            LeaveAPTime = Time.time;
+            Debug.Log("LeaveAPTime" + LeaveAPTime);
         }
     }
     bool HAttitudeCorrection = false;//水平校正
@@ -149,24 +192,25 @@ public class WhackAMole_PlayerMove : MonoBehaviour
         {
             float RecordXPosition = Mathf.Abs(RightHand.transform.position.x - LeftHand.transform.position.x);
             XProportion = 23 / RecordXPosition;
-            
+            HAttitudeCorrection = true;
             Debug.Log(XProportion);
         }
         if (Input.GetKeyDown("a"))
         {
             float RecordYPosition = Mathf.Abs(RightHand.transform.position.y - LeftHand.transform.position.y);
             YProportion = 11 / RecordYPosition;
-            
+            VAttitudeCorrection = true;
             Debug.Log(YProportion);
             //i = 0;
         }
         if (XProportion > 10 && YProportion > 5 && WhackAMole_Timer.WhackAMoleTimer_i > 0)
         {
+            WhackAMole_GameController.WhackAMoleIsGameStarted = true;
             WhackAMole_StartTimer = true;
             WhackAMolePrefab.SetActive(true);
             GameOver_Panel.SetActive(false);
             ReactionTime_Image.SetActive(true) ;
-            Time_Image.SetActive(true) ;
+            Time_Image.SetActive(true) ; 
             OrignalPoint.SetActive(true);
             MainCamera.SetActive(true);
 
@@ -174,28 +218,30 @@ public class WhackAMole_PlayerMove : MonoBehaviour
     }
     public void WhackAMoleSaveCSV()
     {
-        string fileName = "StairTower.csv";
+        string fileName = "WhackAMole.csv";
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("RightHandPX,RightHandPY,RightHandPZ,RightHandRX,RightHandRY,RightHandRZ,LeftHandPX,LeftHandPY,LeftHandPZ,LeftHandRX,LeftHandRY,LeftHandRZ,");
+        sb.AppendLine("RightHandPX,RightHandPY,RightHandPZ,RightHandRX,RightHandRY,RightHandRZ,LeftHandPX,LeftHandPY,LeftHandPZ,LeftHandRX,LeftHandRY,LeftHandRZ,PunchTime,ClosingTime,RecordMolePosition,ReactionTime,ActuallyFirstQuadraScore,ActuallySecondQuadranScore,ActuallyThirdQuadranScore,ActuallyFourthQuadranScore");
 
         // 確定最大長度
         int maxLength = new int[] { RightHandPX.Count, RightHandPY.Count, RightHandPZ.Count, RightHandRX.Count, RightHandRY.Count, RightHandRZ.Count, 
-            LeftHandPX.Count, LeftHandPY.Count, LeftHandPZ.Count, LeftHandRX.Count, LeftHandRY.Count, LeftHandRZ.Count }.Max();
+            LeftHandPX.Count, LeftHandPY.Count, LeftHandPZ.Count, LeftHandRX.Count, LeftHandRY.Count, LeftHandRZ.Count,PunchTime.Count,ClosingTime.Count,
+            WhackAMole_SpawnPrefab.RecordMolePosition.Count,WhackAMole_SpawnPrefab.AverageReactionTime.Count}.Max();
 
 
         // 根據最大長度遍歷
         for (int i = 0; i < maxLength; i++)
         {
             string line = $"{GetValueOrDefault(RightHandPX, i)},{GetValueOrDefault(RightHandPY, i)},{GetValueOrDefault(RightHandPZ, i)},{GetValueOrDefault(RightHandRX, i)},{GetValueOrDefault(RightHandRY, i)},{GetValueOrDefault(RightHandRZ, i)}," +
-                          $"{GetValueOrDefault(LeftHandPX, i)},{GetValueOrDefault(LeftHandPY, i)},{GetValueOrDefault(LeftHandPZ, i)},{GetValueOrDefault(LeftHandRX, i)},{GetValueOrDefault(LeftHandRY, i)},{GetValueOrDefault(LeftHandRZ, i)}";
-                          
+                          $"{GetValueOrDefault(LeftHandPX, i)},{GetValueOrDefault(LeftHandPY, i)},{GetValueOrDefault(LeftHandPZ, i)},{GetValueOrDefault(LeftHandRX, i)},{GetValueOrDefault(LeftHandRY, i)},{GetValueOrDefault(LeftHandRZ, i)},"+
+                          $"{GetValueOrDefault(PunchTime, i)},{GetValueOrDefault(ClosingTime, i)},{GetValueOrDefault(WhackAMole_SpawnPrefab.RecordMolePosition, i)},{GetValueOrDefault(WhackAMole_SpawnPrefab.AverageReactionTime, i)}";
+
 
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {
-                //line += $",{ChestXRA},{ChestXRSD},{RightLegCalfStability},{RightLegCalfStabilitySD},{LeftLegCalfStability},{LeftLegCalfStabilityYSD},{time},{stepcount},{score}";
+                line += $",{WhackAMole_SpawnPrefab.ActuallyFirstQuadraScore},{WhackAMole_SpawnPrefab.ActuallySecondQuadranScore},{WhackAMole_SpawnPrefab.ActuallyThirdQuadranScore},{WhackAMole_SpawnPrefab.ActuallyFourthQuadranScore}" ;
             }
             sb.AppendLine(line);
         }
