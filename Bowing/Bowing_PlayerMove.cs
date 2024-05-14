@@ -14,7 +14,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
 {
     bool isReady = false;
     public GameObject Tracker, Tracker1, Tracker2;
-    static public GameObject LeftLeg, RightLeg, Chest;
+    public GameObject LeftLeg, RightLeg, Chest;
     public GameObject Whale_LowPoly;
     SplineFollower _SplineFollower;
     int ViveNumber =0;
@@ -46,12 +46,24 @@ public  class Bowing_PlayerMove : MonoBehaviour
     List<float> RightLegRZ = new List<float>();
     /*  public Text _GameSpendTime, _MovingAnegle, _AverageSpeed, _RightLeg, _LeftLeg;*/
     // Start is called before the first frame update
+    public static int BowingSceneTimes = 0;
+    public GameObject RestartButton;
+
     void Start()
     {
         _SplineFollower = this.gameObject.GetComponent<SplineFollower>();
         RightLeg = GameObject.FindWithTag("RightLeg");
         LeftLeg = GameObject.FindWithTag("LeftLeg");
         Chest = GameObject.FindWithTag("Chest");
+
+        BowingSceneTimes++;
+        Debug.Log("BowingSceneTimes" + BowingSceneTimes);
+        if (BowingSceneTimes > 1)
+        {
+            Bowing_GameControl gameController = RestartButton.GetComponent<Bowing_GameControl>();
+            gameController.RestartGame();
+            BowingSceneTimes = 0;
+        }
     }
     float RecordLastRYValue = 0, RecordNewRYValue;
     float RecordLastLYValue = 0, RecordNewLYValue;
@@ -189,12 +201,8 @@ public  class Bowing_PlayerMove : MonoBehaviour
     float previousLeftLegRotation = 0;
     float PlayerMoveSpeed()//糶ň场だオ竲ぃ癸嘿笆
     {
-        
-        float leftLegAngularSpeed;
         float currentLeftLegRotation = LeftLeg.transform.eulerAngles.x;
-        
-
-        leftLegAngularSpeed = Mathf.Abs(currentLeftLegRotation - previousLeftLegRotation) / Time.deltaTime ;
+        float leftLegAngularSpeed = Mathf.Abs(currentLeftLegRotation - previousLeftLegRotation) / Time.deltaTime ;
 
         previousLeftLegRotation = currentLeftLegRotation;
         Debug.Log("à硉: "+ leftLegAngularSpeed);
@@ -311,7 +319,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ");
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,AverageSpeed,LeftMoveAngle,RightMoveAngle");
 
         // 絋﹚程
         int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
@@ -329,7 +337,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
             // –︽ソЮ睰参璸计沮
             if (i == 0) // 安砞参璸计沮惠睰Ω
             {
-                //line += $",{ChestXRA},{ChestXRSD},{RightLegCalfStability},{RightLegCalfStabilitySD},{LeftLegCalfStability},{LeftLegCalfStabilityYSD},{WTOSVariance},{time},{stepcount},{score}";
+                line += $",{AverageSpeed.Average()},{LeftLegMoveAngle.Average()},{RightLegMoveAngle.Average()}";
             }
             sb.AppendLine(line);
         }

@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class StairTower_GameControl : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void RestartGame()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    } 
 }

@@ -13,10 +13,10 @@ public class Bowing_Save : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Chest = Bowing_PlayerMove.Chest;
+        /*Chest = Bowing_PlayerMove.Chest;
         LeftLeg = Bowing_PlayerMove.LeftLeg;
         RightLeg = Bowing_PlayerMove.RightLeg;
-        SaveBowingData = Read_Data(Chest, LeftLeg, RightLeg);
+        SaveBowingData = Read_Data(Chest, LeftLeg, RightLeg);*/
 
     }
     String Read_Data(GameObject TrackerValue, GameObject Tracker1Value, GameObject Tracker2Value)

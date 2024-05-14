@@ -48,6 +48,7 @@ public class WhackAMole_PlayerMove : MonoBehaviour
     List<float> PunchTime = new List<float>();
     List<float> ClosingTime = new List<float>();
     float AveragePunchTime, AverageClosing;
+    
     private void Start()
     {
         WhackAMoleSceneTimes++;

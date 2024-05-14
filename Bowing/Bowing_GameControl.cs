@@ -14,7 +14,10 @@ public class Bowing_GameControl : MonoBehaviour
         {
             Application.Quit();
         }
-        WhenGameOver();
+        if(Bowing_PlayerMove.isGameOver)
+        {
+            WhenGameOver();
+        }
     }
     public void WhenGameStartOnclick()
     {
@@ -24,22 +27,28 @@ public class Bowing_GameControl : MonoBehaviour
         GameOverPanel.SetActive(false);
         Timer_Panel.SetActive(true);
         Reiming_Image.SetActive(true);
+        Bowing_Timer.BowingTimer = 0;
+        Bowing_PlayerMove.isGameOver = false;
     }
     public void WhenGameOver()
     {
-        if(Bowing_PlayerMove.isGameOver)
-        {
-            isStart = false;
-            StartPanel.SetActive(false);
-            GameOverPanel.SetActive(true);
-            Timer_Panel.SetActive(false);
-            Reiming_Image.SetActive(false); 
-            Timer_Panel.SetActive(false);
-        }
+        isStart = false;
+        StartPanel.SetActive(false);
+        GameOverPanel.SetActive(true);
+        Timer_Panel.SetActive(false);
+        Reiming_Image.SetActive(false); 
+        Timer_Panel.SetActive(false);
     }
-    public void GameRestart()
+    public void RestartGame()
     {
-        SceneManager.LoadScene("Bowing");
+        isStart = false;
+        Spline.SetActive(false);
+        StartPanel.SetActive(true);
+        GameOverPanel.SetActive(false);
+        Timer_Panel.SetActive(false);
+        Reiming_Image.SetActive(false);
+        Bowing_Timer.BowingTimer = 0;
+        Bowing_PlayerMove.isGameOver = false;
     }
     public void GameList()
     {

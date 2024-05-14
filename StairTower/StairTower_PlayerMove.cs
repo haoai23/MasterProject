@@ -49,6 +49,21 @@ public class StairTower_PlayerMove : MonoBehaviour
     List<float> RightLegRX = new List<float>();
     List<float> RightLegRY = new List<float>();
     List<float> RightLegRZ = new List<float>();
+
+    public static int StairTowerSceneTimes = 0;
+    public GameObject RestartButton;
+    private void Start()
+    {
+        StairTowerSceneTimes++;
+        Debug.Log("StairTowerSceneTimes" + StairTowerSceneTimes);
+        if (StairTowerSceneTimes > 1)
+        {
+            StairTower_GameControl gameController = RestartButton.GetComponent<StairTower_GameControl>();
+            gameController.RestartGame();
+            StairTowerSceneTimes = 0;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

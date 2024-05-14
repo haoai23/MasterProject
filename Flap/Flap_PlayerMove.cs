@@ -81,17 +81,17 @@ public class Flap_PlayerMove : MonoBehaviour
             if (Flap_Score2.IsTouch)
             {
                 YValue.Add(HipsCube.transform.position.y);
-                if(ObstaclesManerger.Range >= 4& ObstaclesManerger.Range<5)
+                if(ObstaclesManerger.Range >= 3& ObstaclesManerger.Range<4)
                 {
                     YValue4Range.Add(HipsCube.transform.position.y);
                     Debug.Log("YValue4Range");
                 }
-                else if (ObstaclesManerger.Range >= 5 & ObstaclesManerger.Range < 6)
+                else if (ObstaclesManerger.Range >= 4 & ObstaclesManerger.Range < 5)
                 {
                     YValue5Range.Add(HipsCube.transform.position.y);
                     Debug.Log("YValue5Range");
                 }
-                else if (ObstaclesManerger.Range >= 6 & ObstaclesManerger.Range < 7)
+                else if (ObstaclesManerger.Range >= 5 & ObstaclesManerger.Range < 6)
                 {
                     YValue6Range.Add(HipsCube.transform.position.y);
                     Debug.Log("YValue6Range");
