@@ -27,7 +27,7 @@ public class StairTower_PlayerMove : MonoBehaviour
     public Text StairTowerScore_Text;
     public static bool StairTowerStartTimer = false;
 
-    public GameObject _Start_Panel,_GameOver_Panel;
+    public GameObject _Start_Panel,_GameOver_Panel,_Timer_Panel;
 
     List<float> LeftLegPX = new List<float>();
     List<float> LeftLegPY = new List<float>();
@@ -169,6 +169,8 @@ public class StairTower_PlayerMove : MonoBehaviour
                 ChestTiptoes = Chest.transform.position.y;
                 RecordSuceesful = true;
                 _Start_Panel.SetActive(false);
+                _Timer_Panel.SetActive(true);
+                _GameOver_Panel.SetActive(false);
                 Debug.Log(i + ": OK");
             }   
         }
@@ -230,18 +232,19 @@ public class StairTower_PlayerMove : MonoBehaviour
         {
             StairTower_Score += 1;
             StairTowerScore_Text.text = StairTower_Score.ToString();
+           // StairTower_PrefabMove.MoveSpeed =0.3f+ StairTower_Timer.StairTower_i / 100;
             Destroy(collision.gameObject);
-
-            StairTower_PrefabMove.MoveSpeed += StairTower_Score / 10;
-            Debug.Log("MoveSpeed" + StairTower_PrefabMove.MoveSpeed);
         }
     }
     public static bool isGameOver = false;//判斷是否遊戲結束了以方便分析
+    public static bool isStart = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "StairTower_Stairline")
         {
-            StairTower_PrefabMove.MoveSpeed = 0.3f ;
+            isStart = true;
+
+            Debug.Log("開始下降");
         }
         else if (collision.gameObject.name == "Deathline")
         {
@@ -249,7 +252,7 @@ public class StairTower_PlayerMove : MonoBehaviour
             StairTower_PrefabMove.MoveSpeed = 0f;
             Debug.Log("遊戲結束");
         }
-        Debug.Log("開始下降");
+
         
     }
 
@@ -418,7 +421,7 @@ public class StairTower_PlayerMove : MonoBehaviour
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,WhenTiptos,ChestXRA,ChestXRSD,RightLegCalfStability,RightLegCalfStabilitySD,LeftLegCalfStability,LeftLegCalfStabilityYSD,WTOSVariance,time,stepcount,score");
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,WhenTiptos,RXZValue,LXZvalue,ChestXRA,ChestXRSD,RightLegCalfStability,RightLegCalfStabilitySD,LeftLegCalfStability,LeftLegCalfStabilityYSD,WTOSVariance,time,stepcount,score");
 
         // 確定最大長度
         int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
@@ -431,7 +434,8 @@ public class StairTower_PlayerMove : MonoBehaviour
         {
             string line = $"{GetValueOrDefault(LeftLegPX, i)},{GetValueOrDefault(LeftLegPY, i)},{GetValueOrDefault(LeftLegPZ, i)},{GetValueOrDefault(LeftLegRX, i)},{GetValueOrDefault(LeftLegRY, i)},{GetValueOrDefault(LeftLegRZ, i)}," +
                           $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
-                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)},{GetValueOrDefault(WhenTiptoes, i)}";
+                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)},{GetValueOrDefault(WhenTiptoes, i)},"+
+                          $"{GetValueOrDefault(RXZValue,i)},{GetValueOrDefault(LXZValue,i)}";
 
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次

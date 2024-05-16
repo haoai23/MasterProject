@@ -22,6 +22,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
     public GameObject Up_Arrow, DownArrow, OK;
     float RightLegEulerAnglesValue, LeftLegEulerAnglesValue, ChestEulerAnglesValue;//用來記錄第一次的原始數據
     float RightLegYEulerAnglesValue, LeftLegYEulerAnglesValue;//用來記錄第一次的原始數據
+    float RightLegFirstXPosition, LeftLegFitstXPosition;
     public static bool isGameOver = false;
 
     List<float> LeftLegPX = new List<float>();
@@ -65,8 +66,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
             BowingSceneTimes = 0;
         }
     }
-    float RecordLastRYValue = 0, RecordNewRYValue;
-    float RecordLastLYValue = 0, RecordNewLYValue;
+
     // Update is called once per frame
     void Update()
     {
@@ -78,6 +78,9 @@ public  class Bowing_PlayerMove : MonoBehaviour
 
             RightLegYEulerAnglesValue = RightLeg.transform.eulerAngles.y;
             LeftLegYEulerAnglesValue = LeftLeg.transform.eulerAngles.y;
+
+            RightLegFirstXPosition = RightLeg.transform.position.x;
+            LeftLegFitstXPosition = LeftLeg.transform.position.x;
             PlayerMove(PlayerMoveSpeed());
             Debug.Log("IsStart");
         }
@@ -264,10 +267,16 @@ public  class Bowing_PlayerMove : MonoBehaviour
         }
         
     }
+    float RecordLastRYValue = 0, RecordNewRYValue;
+    float RecordLastLYValue = 0, RecordNewLYValue;
+
+    float RecordLastRXPValue = 0, RecordNewRXPValue;
+    float RecordLastLXPValue = 0, RecordNewLXPValue;
+
     void RecordMoveAngle()
     {
-        RecordNewRYValue = RightLeg.transform.eulerAngles.y - RightLegYEulerAnglesValue;
-        RecordNewLYValue = LeftLeg.transform.eulerAngles.y - LeftLegYEulerAnglesValue;
+        RecordNewRYValue = RightLeg.transform.eulerAngles.x - RightLegEulerAnglesValue;
+        RecordNewLYValue = LeftLeg.transform.eulerAngles.x - LeftLegEulerAnglesValue;
         if (RecordNewRYValue > RecordLastRYValue)
         {
             RightLegMoveAngle.Add(RecordNewRYValue);
@@ -281,12 +290,40 @@ public  class Bowing_PlayerMove : MonoBehaviour
             RecordLastLYValue = RecordNewLYValue;
         }
         else { RecordLastLYValue = RecordNewLYValue; }
+
+        RecordNewRXPValue = RightLeg.transform.position.x - RightLegFirstXPosition;
+        RecordNewLXPValue = LeftLeg.transform.position.x - LeftLegFitstXPosition;
+        if (RecordNewRXPValue > RecordLastRXPValue)
+        {
+            UPRightLegMoveXPosition.Add(RecordNewRXPValue);
+            RecordLastRXPValue = RecordNewRXPValue;
+        }
+        else 
+        { 
+            RecordLastRXPValue = RecordNewRXPValue;
+            DownRightLegMoveXPosition.Add(Mathf.Abs(RecordNewRXPValue));
+
+        }
+
+        if (RecordNewLXPValue > RecordLastLXPValue)
+        {
+            UPLeftLegMoveXposition.Add(RecordNewLXPValue);
+            RecordLastLXPValue = RecordNewLXPValue;
+        }
+        else { RecordLastLXPValue = RecordNewLXPValue;
+            DownLeftMoveXPosition.Add(RecordNewLXPValue);
+        }
         Debug.Log("IsRecord");
     }
     List<float> RightLegValue = new List<float>();
     List<float> LeftLegValue = new List<float>();
     List<float> RightLegMoveAngle = new List<float>();//受測者的移動角度
     List<float> LeftLegMoveAngle = new List<float>();//受測者的移動角度
+    List<float> UPRightLegMoveXPosition = new List<float>();//向上右腳受測者X位置的移動軌跡
+    List<float> UPLeftLegMoveXposition = new List<float>();//向下受測者X位置的移動軌跡
+    List<float> DownRightLegMoveXPosition = new List<float>();//向上右腳受測者X位置的移動軌跡
+    List<float> DownLeftMoveXPosition = new List<float>();//向下受測者X位置的移動軌跡
+
     List<float> AverageSpeed = new List<float>();
     public Text RightLegSandardValue, LeftLegSandardValue, _AverageSpeed, _RightMoveAngle, _LeftMoveAngle;
     void Bowing_DataAnalysis()
@@ -319,12 +356,13 @@ public  class Bowing_PlayerMove : MonoBehaviour
         string timePath = Path.Combine(PlayerPrefs.GetString("timePath"), fileName);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,AverageSpeed,LeftMoveAngle,RightMoveAngle");
+        sb.AppendLine("LeftLegPX,LeftLegPY,LeftLegPZ,LeftLegRX,LeftLegRY,LeftLegRZ,ChestPX,ChestPY,ChestPZ,ChestRX,ChestRY,ChestRZ,RightLegPX,RightLegPY,RightLegPZ,RightLegRX,RightLegRY,RightLegRZ,UPRightLegMoveXPosition,UPLeftLegMoveXposition,DownRightLegMoveXPosition,DownLeftLegMoveXposition,AverageSpeed,LeftMoveAngle,RightMoveAngle");
 
         // 確定最大長度
         int maxLength = new int[] { LeftLegPX.Count, LeftLegPY.Count, LeftLegPZ.Count, LeftLegRX.Count, LeftLegRY.Count, LeftLegRZ.Count,
                                     ChestPX.Count, ChestPY.Count, ChestPZ.Count, ChestRX.Count, ChestRY.Count, ChestRZ.Count,
-                                    RightLegPX.Count, RightLegPY.Count, RightLegPZ.Count, RightLegRX.Count, RightLegRY.Count, RightLegRZ.Count}.Max();
+                                    RightLegPX.Count, RightLegPY.Count, RightLegPZ.Count, RightLegRX.Count, RightLegRY.Count, RightLegRZ.Count,
+                                    UPRightLegMoveXPosition .Count,UPLeftLegMoveXposition.Count,DownRightLegMoveXPosition.Count,DownLeftMoveXPosition.Count}.Max();
 
 
         // 根據最大長度遍歷
@@ -332,7 +370,8 @@ public  class Bowing_PlayerMove : MonoBehaviour
         {
             string line = $"{GetValueOrDefault(LeftLegPX, i)},{GetValueOrDefault(LeftLegPY, i)},{GetValueOrDefault(LeftLegPZ, i)},{GetValueOrDefault(LeftLegRX, i)},{GetValueOrDefault(LeftLegRY, i)},{GetValueOrDefault(LeftLegRZ, i)}," +
                           $"{GetValueOrDefault(ChestPX, i)},{GetValueOrDefault(ChestPY, i)},{GetValueOrDefault(ChestPZ, i)},{GetValueOrDefault(ChestRX, i)},{GetValueOrDefault(ChestRY, i)},{GetValueOrDefault(ChestRZ, i)}," +
-                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)}";
+                          $"{GetValueOrDefault(RightLegPX, i)},{GetValueOrDefault(RightLegPY, i)},{GetValueOrDefault(RightLegPZ, i)},{GetValueOrDefault(RightLegRX, i)},{GetValueOrDefault(RightLegRY, i)},{GetValueOrDefault(RightLegRZ, i)},"+
+                          $"{GetValueOrDefault(UPRightLegMoveXPosition, i)},{GetValueOrDefault(UPLeftLegMoveXposition, i)},{GetValueOrDefault(DownRightLegMoveXPosition, i)},{GetValueOrDefault(DownLeftMoveXPosition, i)}";
 
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次

@@ -47,10 +47,21 @@ public class Climing_PlayerMove : MonoBehaviour
     List<float> RightLegRX = new List<float>();
     List<float> RightLegRY = new List<float>();
     List<float> RightLegRZ = new List<float>();
+
+    public static int ClimingSceneTimes = 0;
+    public GameObject RestartButton;
     private void Start()
     {
         PlayerRigiBody = GetComponent<Rigidbody>();
         climing_GameControl = GetComponent<Climing_GameControl>();
+        ClimingSceneTimes++;
+        Debug.Log("StairTowerSceneTimes" + ClimingSceneTimes);
+        if (ClimingSceneTimes > 1)
+        {
+            Climing_GameControl gameController = RestartButton.GetComponent<Climing_GameControl>();
+            gameController.RestartGame();
+            ClimingSceneTimes = 0;
+        }
     }
 
     // Update is called once per frame
@@ -100,6 +111,7 @@ public class Climing_PlayerMove : MonoBehaviour
             RightLegRX.Add(LeftLeg.transform.eulerAngles.x);
             RightLegRY.Add(LeftLeg.transform.eulerAngles.y);
             RightLegRZ.Add(LeftLeg.transform.eulerAngles.z);
+
             if (isEnter == false)
             {
                 newR_OR_L = -1;

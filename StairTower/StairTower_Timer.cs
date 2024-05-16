@@ -16,11 +16,11 @@ public class StairTower_Timer : MonoBehaviour
     }
     void CountDown90s()
     {
-        if(!StairTower_PlayerMove.isGameOver)
+        /*if(!StairTower_PlayerMove.isGameOver)
         {
             _StairTowerTimer.SetActive(false);
             
-        }
+        }*/
         if (StairTower_PlayerMove.StairTowerStartTimer & !StairTower_PlayerMove.isGameOver)
         {
             StairTower_i++;

@@ -177,10 +177,10 @@ public class WhackAMole_SpawnPrefab : MonoBehaviour
             }
             ActuallyFourthQuadranScore = (float)FourthQuadranScore / TotalFourthQuadranScore;
         }
-        Debug.Log("ActuallyFirstQuadranScore: " + ActuallyFirstQuadraScore);
+        /*Debug.Log("ActuallyFirstQuadranScore: " + ActuallyFirstQuadraScore);
         Debug.Log("ActuallySecondQuadranScore: " + ActuallySecondQuadranScore);
         Debug.Log("ActuallyThirdQuadranScore: " + ActuallyThirdQuadranScore);
-        Debug.Log("ActuallyForthQuadranScore: " + ActuallyFourthQuadranScore);
+        Debug.Log("ActuallyForthQuadranScore: " + ActuallyFourthQuadranScore);*/
         WhackAMole_GameReviews();
     }
     void WhackAMole_GameReviews()

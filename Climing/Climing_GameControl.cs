@@ -15,7 +15,8 @@ public class Climing_GameControl : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.F5))
         {
-            Climing_GameReload();
+            //Climing_GameReload();
+            RestartGame();
         }
         if(Climing_PlayerMove.isGameOver) { Climing_GameOver(); }
     }
@@ -32,7 +33,7 @@ public class Climing_GameControl : MonoBehaviour
     {
         Application.Quit();
     }
-    public void Climing_GameReload()
+    public void RestartGame()
     {
         StartPanel.SetActive(true);
         StepTimer.SetActive(false);

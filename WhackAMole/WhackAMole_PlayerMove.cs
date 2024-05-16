@@ -11,6 +11,7 @@ using Valve.VR;
 using Valve.VR.InteractionSystem;
 using static Unity.Collections.AllocatorManager;
 using System.Linq;
+using System;
 
 public class WhackAMole_PlayerMove : MonoBehaviour
 {
@@ -45,8 +46,16 @@ public class WhackAMole_PlayerMove : MonoBehaviour
     List<float> LeftHandRY = new List<float>();
     List<float> LeftHandRZ = new List<float>();
 
-    List<float> PunchTime = new List<float>();
-    List<float> ClosingTime = new List<float>();
+    float PunchSpeed = 0, punchspeed1 = 0, punchspeed0 = 0;
+    float RPunchTime, RClosingTime;
+    float RLPunchTime = 0, RLClosingTime = 0;//R:Recored,L:Last
+    public static float LeaveAPTime = 0;//離開原始點的時間
+
+    public static List<float> PunchTime = new List<float>();
+    public static List<float> ClosingTime = new List<float>();
+    List<float> TestClosingTime = new List<float>();
+    List<float> TestPunchTime = new List<float>();
+
     float AveragePunchTime, AverageClosing;
     
     private void Start()
@@ -86,7 +95,33 @@ public class WhackAMole_PlayerMove : MonoBehaviour
             LeftHandRX.Add(LeftHandT.transform.eulerAngles.x);
             LeftHandRY.Add(LeftHandT.transform.eulerAngles.y);
             LeftHandRZ.Add(LeftHandT.transform.eulerAngles.z);
-
+           // Debug.Log("1111punchspeed0 " + punchspeed0);
+            //Debug.Log("1111RPunchTime " + PunchTime[0]);
+            /*if (AtOriginalPoint == false)//紀錄回來時間
+            {
+                Debug.Log("Run OK ");
+                punchspeed0 = Time.time;
+                RPunchTime = punchspeed0 - LeaveAPTime;//出拳速度
+                PunchTime.Add(RPunchTime);
+            }
+            else if (AtOriginalPoint == true)
+            {
+                punchspeed1 = Time.time;
+                RClosingTime = punchspeed1 - punchspeed0;//收拳速度
+                ClosingTime.Add(RClosingTime);
+                Debug.Log("RClosingTime " + RClosingTime);
+                Debug.Log("punchspeed1 " + punchspeed1);
+            }/*
+            /*if(RPunchTime != RLPunchTime)
+            {
+                PunchTime.Add(RPunchTime);
+                RLPunchTime = RPunchTime;
+            }
+            if(RClosingTime != RLClosingTime)
+            {
+                ClosingTime.Add(RClosingTime);
+                RLClosingTime = RClosingTime;
+            }*/
             Debug.Log("WhackAMole遊戲讀取");
         }
         if (WhackAMole_Timer.WhackAMoleTimer_i == 0)
@@ -122,28 +157,27 @@ public class WhackAMole_PlayerMove : MonoBehaviour
         LeftHand.transform.position = new Vector3(-LeftHandT.transform.position.x * XProportion, LeftHandT.transform.position.y * YProportion, LeftHandT.transform.position.z);
         
     }
-    float PunchSpeed = 0, punchspeed1 = 0, punchspeed0 = 0 ;
-    float RPunchTime  , RClosingTime;
-
-    public static float LeaveAPTime= 0;//離開原始點的時間
+    /*public float PunchSpeed = 0, punchspeed1 = 0, punchspeed0 = 0 ;
+    public float RPunchTime  , RClosingTime;
+    public float RLPunchTime = 0, RLClosingTime = 0;//R:Recored,L:Last
+    public static float LeaveAPTime= 0;//離開原始點的時間*/
     void OnCollisionEnter(Collision collision)        
-    {
-        
+    {      
         if (collision.gameObject.tag == "WhackAMole_Mole")
         {
-            Destroy(collision.gameObject); 
             WhackAMole_Score.Score = WhackAMole_Score.Score + 10;
+            Debug.Log("punchspeed0 "+ punchspeed0);
+            Debug.Log("RPunchTime " + RPunchTime);
+            Debug.Log("Run OK ");
+            punchspeed0 = Time.time;
+            RPunchTime = punchspeed0 - LeaveAPTime;//出拳速度
+            PunchTime.Add(RPunchTime);
             AtOriginalPoint = false;
             if (AtOriginalPoint == false)//紀錄回來時間
             {
-                punchspeed0 = Time.time;
+               
             }
-            RPunchTime = punchspeed0 - LeaveAPTime;//出拳速度
-            if(RPunchTime > 0) {  PunchTime.Add(RPunchTime);}
-           
-            //DestroyPrefabTime = Time.time;
-            Debug.Log(" PunchTime: " + RPunchTime);
-            Debug.Log(" PunchTime數列長度: " + PunchTime.Count);
+            Destroy(collision.gameObject); 
 
         }
         else if (collision.gameObject.tag == "WhackAMole_Flower")
@@ -156,18 +190,18 @@ public class WhackAMole_PlayerMove : MonoBehaviour
         {
             if (RightHand.transform.position.x - LeftHand.transform.position.x <6)
             {
+                punchspeed1 = Time.time;
+                RClosingTime = punchspeed1 - punchspeed0;//收拳速度
+                ClosingTime.Add(RClosingTime);
+                Debug.Log("RClosingTime " + RClosingTime);
+                Debug.Log("punchspeed1 " + punchspeed1);
                 AtOriginalPoint = true;
                 if (AtOriginalPoint == true)
                 {
-                    punchspeed1 = Time.time;
+                    
                 }
-                RClosingTime = punchspeed1 - punchspeed0;//收拳速度
-                if(RClosingTime >0) { ClosingTime.Add(RClosingTime);}
-                
-                //punchspeed1 = punchspeed0;
-                Debug.Log("ClosingTime" + RClosingTime);
-                Debug.Log("ClosingTime數列長度" + ClosingTime.Count);
             }
+            
         }
         IEnumerator DeactivateDeductBlood(float delay)
         {
@@ -175,6 +209,11 @@ public class WhackAMole_PlayerMove : MonoBehaviour
             DeductBlood.SetActive(false);
         }
     }
+    void test(float punch,float closing)
+    {
+        ClosingTime.Add(closing);
+    }
+    
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.name == "OriginalPoint")
@@ -182,7 +221,9 @@ public class WhackAMole_PlayerMove : MonoBehaviour
             LeaveAPTime = Time.time;
             Debug.Log("LeaveAPTime" + LeaveAPTime);
         }
-    }
+
+
+        }
     bool HAttitudeCorrection = false;//水平校正
     bool VAttitudeCorrection = false;//垂直校正
 
@@ -214,7 +255,6 @@ public class WhackAMole_PlayerMove : MonoBehaviour
             Time_Image.SetActive(true) ; 
             OrignalPoint.SetActive(true);
             MainCamera.SetActive(true);
-
         }
     }
     public void WhackAMoleSaveCSV()
@@ -238,7 +278,7 @@ public class WhackAMole_PlayerMove : MonoBehaviour
                           $"{GetValueOrDefault(LeftHandPX, i)},{GetValueOrDefault(LeftHandPY, i)},{GetValueOrDefault(LeftHandPZ, i)},{GetValueOrDefault(LeftHandRX, i)},{GetValueOrDefault(LeftHandRY, i)},{GetValueOrDefault(LeftHandRZ, i)},"+
                           $"{GetValueOrDefault(PunchTime, i)},{GetValueOrDefault(ClosingTime, i)},{GetValueOrDefault(WhackAMole_SpawnPrefab.RecordMolePosition, i)},{GetValueOrDefault(WhackAMole_SpawnPrefab.AverageReactionTime, i)}";
 
-
+            
             // 在每一行的末尾添加統計數據
             if (i == 0) // 假設統計數據只需添加一次
             {

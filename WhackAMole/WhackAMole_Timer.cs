@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class WhackAMole_Timer : MonoBehaviour
 {
-    public  static int WhackAMoleTimer_i = 90;
+    public  static int WhackAMoleTimer_i = 20;
     public Text WhackAMoleTimer_Text;
     public GameObject MainCamera, ReactionTime_Image,Time_Image, GameOver_Panel, WhackAMolePrefabs, Score, OriginalPoint;
   
