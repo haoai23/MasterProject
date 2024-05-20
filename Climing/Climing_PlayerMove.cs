@@ -449,6 +449,7 @@ public class Climing_PlayerMove : MonoBehaviour
     {
         if (isGameOver)
         {
+            AudioManager.PlayWhichBGM("GameOver");
             WhenGameOverShowCoin.text = CoinNumber.ToString();
             float AbdominalXrotationMean = AbdominalXrotation.Average();
             // 計算每個數據與平均值的差值的平方相加

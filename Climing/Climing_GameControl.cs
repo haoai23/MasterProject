@@ -46,6 +46,7 @@ public class Climing_GameControl : MonoBehaviour
     }
     public void Climing_GameOver()
     {
+
         StartPanel.SetActive(false);
         StepTimer.SetActive(false);
         GameOverPanel.SetActive(true);

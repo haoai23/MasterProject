@@ -218,7 +218,8 @@ public class WhackAMole_PlayerMove : MonoBehaviour
     {
         if (collision.gameObject.name == "OriginalPoint")
         {
-            LeaveAPTime = Time.time;
+            if (WhackAMole_StartTimer & isReady) {  LeaveAPTime = Time.time;}
+           
             Debug.Log("LeaveAPTime" + LeaveAPTime);
         }
 

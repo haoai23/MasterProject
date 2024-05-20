@@ -22,6 +22,7 @@ public class Flap_GameStartandEnd : MonoBehaviour
     }
     public  void WhenGameOver()
     {
+        AudioManager.PlayWhichBGM("GameOver");
         GameInfo.SetActive(false);
         Obstacles.SetActive(false);
         StartScreenCanvas.SetActive(false);

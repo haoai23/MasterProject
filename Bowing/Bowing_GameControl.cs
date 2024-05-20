@@ -32,6 +32,7 @@ public class Bowing_GameControl : MonoBehaviour
     }
     public void WhenGameOver()
     {
+        AudioManager.PlayWhichBGM("GameOver");
         isStart = false;
         StartPanel.SetActive(false);
         GameOverPanel.SetActive(true);

@@ -65,6 +65,7 @@ public  class Bowing_PlayerMove : MonoBehaviour
             gameController.RestartGame();
             BowingSceneTimes = 0;
         }
+
     }
 
     // Update is called once per frame

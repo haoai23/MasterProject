@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class WhackAMole_Timer : MonoBehaviour
 {
-    public  static int WhackAMoleTimer_i = 20;
+    public  static int WhackAMoleTimer_i = 90;
     public Text WhackAMoleTimer_Text;
     public GameObject MainCamera, ReactionTime_Image,Time_Image, GameOver_Panel, WhackAMolePrefabs, Score, OriginalPoint;
   
@@ -26,6 +26,7 @@ public class WhackAMole_Timer : MonoBehaviour
         {
             //WhackAMoleTimer_i = 0;
             WhackAMole_PlayerMove.WhackAMole_StartTimer = false;
+            AudioManager.PlayWhichBGM("GameOver");
             MainCamera.SetActive(false);
             ReactionTime_Image.SetActive(false);
             Time_Image.SetActive(false);

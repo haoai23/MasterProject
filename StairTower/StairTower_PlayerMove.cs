@@ -134,6 +134,7 @@ public class StairTower_PlayerMove : MonoBehaviour
             IsJumping = true;
             StairTower_Player.GetComponent<Rigidbody2D>().velocity = Vector2.up *2f;
             WhenTiptoes.Add(Chest.transform.position.y);
+            AudioManager.MusicPlayOneShot("Jump");
         }
         else
         {
@@ -249,6 +250,7 @@ public class StairTower_PlayerMove : MonoBehaviour
         else if (collision.gameObject.name == "Deathline")
         {
             isGameOver = true;
+            AudioManager.PlayWhichBGM("GameOver");
             StairTower_PrefabMove.MoveSpeed = 0f;
             Debug.Log("¹CÀ¸µ²§ô");
         }

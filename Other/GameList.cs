@@ -35,6 +35,7 @@ public class GameList : MonoBehaviour
     }
     public void UserInterface()
     {
+        AudioManager.MusicPlayOneShot("Click");
         _UserInterface.SetActive(false);
         _GameList.SetActive(false);
         DefindTracker.SetActive(true);
@@ -81,26 +82,33 @@ public class GameList : MonoBehaviour
     }
     public void Game_Bowing()
     {
+        AudioManager.MusicPlayOneShot("Click");
         SceneManager.LoadScene("Bowing");
     } 
     public void Game_Flap()
     {
+        AudioManager.MusicPlayOneShot("Click");
         SceneManager.LoadScene("Flap");
     } 
     public void Game_Step_Training()
     {
+        AudioManager.MusicPlayOneShot("Click");
         SceneManager.LoadScene("Step training");
     } 
     public void Game_WhackAMole()
     {
+        AudioManager.MusicPlayOneShot("Click");
         SceneManager.LoadScene("WhackAMole");
     } 
     public void Game_StairTower()
     {
+        AudioManager.MusicPlayOneShot("Click");
         SceneManager.LoadScene("UpTheStair_StairTower");
     }
     public void User_Interface()
     {
+        AudioManager.MusicPlayOneShot("Click");
+        //udioManager.PlayWhichBGM("GameOver");
         SceneManager.LoadScene("UserInterface");
     }
     public static bool OIP = false;//OptionIsPress
@@ -109,6 +117,6 @@ public class GameList : MonoBehaviour
         OIP = true;
         _UserInterface.SetActive(false);
         _GameList.SetActive(true);
-        
+        AudioManager.MusicPlayOneShot("Click");
     }
 }
